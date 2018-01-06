@@ -216,4 +216,14 @@ class Dealer extends BaseDealer implements DealerContract
     {
         return $this->cardEvaluationRules->evaluateHands($board, $playerHands);
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'deck' => $this->deck() != null ? $this->deck()->jsonSerialize() : null,
+            'communityCards' => $this->communityCards() != null ? $this->communityCards()->toJson() : null,
+            'burnCards' => $this->burnCards() != null ? $this->burnCards()->toJson() : null,
+            'hands' => $this->hands() != null ? $this->hands()->toJson() : null,
+        ];
+    }
 }

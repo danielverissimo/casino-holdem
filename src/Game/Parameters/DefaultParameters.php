@@ -85,4 +85,14 @@ class DefaultParameters implements GameParameters
     {
         return $this->tableSize;
     }
+
+    function jsonSerialize()
+    {
+        return [
+            'gameId' => $this->gameId,
+            'smallBlind' => $this->smallBlind,
+            'bigBlind' => $this->bigBlind,
+            'tableSize' => $this->tableSize
+        ];
+    }
 }

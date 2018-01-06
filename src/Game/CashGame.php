@@ -13,8 +13,9 @@ use Cysha\Casino\Game\TableCollection;
 use Cysha\Casino\Holdem\Cards\Evaluators\SevenCard;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use JsonSerializable;
 
-final class CashGame implements Game
+final class CashGame implements Game, JsonSerializable
 {
     /**
      * @var UuidInterface
@@ -180,7 +181,7 @@ final class CashGame implements Game
     public function assignPlayersToTables()
     {
         $groupedPlayers = $this->players()
-        //->shuffle()
+        ->shuffle()
             ->chunk($this->rules()->tableSize())
             ->map(function (PlayerCollection $players) {
                 $dealer = Dealer::startWork(new Deck(), new SevenCard());
@@ -190,5 +191,16 @@ final class CashGame implements Game
             ->toArray();
 
         $this->tables = TableCollection::make($groupedPlayers);
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id->toString(),
+            'name' => $this->name,
+            'rules' => $this->rules != null ? $this->rules->jsonSerialize() : null,
+            'players' => $this->players != null ? $this->players->jsonSerialize() : null,
+            'tables' => $this->tables != null ? $this->tables->jsonSerialize() : null,
+        ];
     }
 }

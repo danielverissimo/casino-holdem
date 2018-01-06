@@ -6,9 +6,9 @@ use Assert\Assertion;
 use Cysha\Casino\Game\Chips;
 use Cysha\Casino\Game\Client;
 use Cysha\Casino\Game\Contracts\Player as PlayerContract;
-use Ramsey\Uuid\Uuid;
+use JsonSerializable;
 
-class Player extends Client implements PlayerContract
+class Player extends Client implements PlayerContract, JsonSerializable
 {
     /**
      * @var Chips
@@ -21,7 +21,7 @@ class Player extends Client implements PlayerContract
      * @param string $name
      * @param Chips  $chips
      */
-    public function __construct(Uuid $id, $name, Chips $wallet = null, Chips $chips = null)
+    public function __construct(int $id, $name, Chips $wallet = null, Chips $chips = null)
     {
         parent::__construct($id, $name, $wallet);
 
@@ -68,5 +68,14 @@ class Player extends Client implements PlayerContract
     {
         Assertion::greaterOrEqualThan($chips->amount(), 0);
         $this->chipStack()->subtract($chips);
+    }
+
+    function jsonSerialize()
+    {
+        return [
+            'id' => $this->id(),
+            'name' => $this->name(),
+            'wallet' => $this->wallet()->jsonSerialize()
+        ];
     }
 }

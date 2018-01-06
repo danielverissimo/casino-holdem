@@ -10,8 +10,9 @@ use Cysha\Casino\Game\PlayerCollection;
 use Cysha\Casino\Game\Table as BaseTable;
 use Cysha\Casino\Holdem\Exceptions\TableException;
 use Ramsey\Uuid\Uuid;
+use JsonSerializable;
 
-class Table extends BaseTable
+class Table extends BaseTable implements JsonSerializable
 {
     /**
      * @var Uuid
@@ -200,5 +201,14 @@ class Table extends BaseTable
                 return $player->name() === $client->name();
             })
             ->values();
+    }
+
+    function jsonSerialize()
+    {
+        return [
+            'id' => $this->id()->toString(),
+            'players' => $this->players != null ? $this->players->jsonSerialize() : null,
+            'playersSatOut' => $this->playersSatOut != null ? $this->playersSatOut->jsonSerialize() : null,
+        ];
     }
 }

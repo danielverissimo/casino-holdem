@@ -260,8 +260,7 @@ class Round
 
                     $this->chipPots()->remove($chipPot);
                 }
-            })
-        ;
+            });
     }
 
     /**
@@ -380,7 +379,7 @@ class Round
 
     /**
      * @param PlayerContract $player
-     * @param Chips          $chips
+     * @param Chips $chips
      */
     private function postBlind(PlayerContract $player, $chips)
     {
@@ -404,8 +403,7 @@ class Round
             ->filter(function (PlayerContract $player) use ($nextPlayer) {
                 return $player->name() === $nextPlayer['player'];
             })
-            ->first()
-        ;
+            ->first();
     }
 
     /**
@@ -607,7 +605,7 @@ class Round
 
     /**
      * @param PlayerContract $player
-     * @param Chips          $chips
+     * @param Chips $chips
      *
      * @throws RoundException
      */
@@ -688,13 +686,13 @@ class Round
     private function highestBet(): Chips
     {
         return Chips::fromAmount($this->betStacks()->max(function (Chips $chips) {
-            return $chips->amount();
-        }) ?? 0);
+                return $chips->amount();
+            }) ?? 0);
     }
 
     /**
      * @param PlayerContract $player
-     * @param Chips          $chips
+     * @param Chips $chips
      */
     private function placeChipBet(PlayerContract $player, Chips $chips)
     {
