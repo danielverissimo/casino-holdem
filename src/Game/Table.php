@@ -189,8 +189,7 @@ class Table extends BaseTable implements JsonSerializable
             ->filter(function (Player $player) use ($client) {
                 return $player->name() === $client->name();
             })
-            ->first()
-        ;
+            ->first();
 
         if ($player === null) {
             throw TableException::notRegistered($client, $this);

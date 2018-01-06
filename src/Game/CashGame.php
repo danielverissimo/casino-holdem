@@ -11,6 +11,7 @@ use Cysha\Casino\Game\Contracts\GameParameters;
 use Cysha\Casino\Game\PlayerCollection;
 use Cysha\Casino\Game\TableCollection;
 use Cysha\Casino\Holdem\Cards\Evaluators\SevenCard;
+use Cysha\Casino\Holdem\Exceptions\TableException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use JsonSerializable;
@@ -172,7 +173,7 @@ final class CashGame implements Game, JsonSerializable
             ->each(function (Table $table) use ($client) {
                 try {
                     $table->removePlayer($client);
-                } catch (Cysha\Casino\Holdem\Exceptions\TableException $e) {
+                } catch (TableException $e) {
 
                 }
             });
