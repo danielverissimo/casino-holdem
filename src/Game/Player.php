@@ -70,7 +70,7 @@ class Player extends Client implements PlayerContract, JsonSerializable
         $this->chipStack()->subtract($chips);
     }
 
-    function jsonSerialize()
+    public function jsonSerialize()
     {
         return [
             'id' => $this->id(),

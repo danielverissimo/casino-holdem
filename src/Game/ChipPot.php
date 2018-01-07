@@ -6,8 +6,9 @@ use Cysha\Casino\Game\Chips;
 use Cysha\Casino\Game\ChipStackCollection;
 use Cysha\Casino\Game\Contracts\Player;
 use Cysha\Casino\Game\PlayerCollection;
+use JsonSerializable;
 
-class ChipPot
+class ChipPot implements JsonSerializable
 {
     /**
      * @var ChipStackCollection
@@ -109,5 +110,12 @@ class ChipPot
             ->implode(', ');
 
         return sprintf('[%d] [%s]', $this->total()->amount(), $players);
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'chips' => $this->chips,
+        ];
     }
 }

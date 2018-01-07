@@ -3,8 +3,9 @@
 namespace Cysha\Casino\Holdem\Game;
 
 use Illuminate\Support\Collection;
+use JsonSerializable;
 
-class ActionCollection extends Collection
+class ActionCollection extends Collection implements JsonSerializable
 {
     public function all()
     {

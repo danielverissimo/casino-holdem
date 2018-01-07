@@ -12,8 +12,9 @@ use Cysha\Casino\Game\PlayerCollection;
 use Cysha\Casino\Holdem\Exceptions\RoundException;
 use Cysha\Casino\Holdem\Game\LeftToAct;
 use Ramsey\Uuid\Uuid;
+use JsonSerializable;
 
-class Round
+class Round implements JsonSerializable
 {
     /**
      * @var Uuid
@@ -751,5 +752,21 @@ class Round
             ->resetActions()
             ->sortBySeats()
             ->resetPlayerListFromSeat($seat);
+    }
+
+    function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'table' => $this->table != null ? $this->table->jsonSerialize() : null,
+            'betStacks' => $this->table != null ? $this->table->jsonSerialize() : null,
+            'foldedPlayers' => $this->foldedPlayers != null ? $this->foldedPlayers->jsonSerialize() : null,
+            'chipPots' => $this->chipPots != null ? $this->chipPots->jsonSerialize() : null,
+            'currentPot' => $this->currentPot != null ? $this->currentPot->jsonSerialize() : null,
+            'actions' => $this->actions != null ? $this->actions->jsonSerialize() : null,
+            'actions' => $this->actions != null ? $this->actions->jsonSerialize() : null,
+            'leftToAct' => $this->leftToAct != null ? $this->leftToAct->jsonSerialize() : null,
+            'gameRules' => $this->gameRules != null ? $this->gameRules->jsonSerialize() : null,
+        ];
     }
 }

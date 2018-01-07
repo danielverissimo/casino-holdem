@@ -4,9 +4,10 @@ namespace Cysha\Casino\Holdem\Game\Parameters;
 
 use Cysha\Casino\Game\Chips;
 use Cysha\Casino\Game\Contracts\GameParameters;
+use JsonSerializable;
 use Ramsey\Uuid\Uuid;
 
-class CashGameParameters extends DefaultParameters implements GameParameters
+class CashGameParameters extends DefaultParameters implements GameParameters, JsonSerializable
 {
     /**
      * @var Chips
@@ -55,5 +56,18 @@ class CashGameParameters extends DefaultParameters implements GameParameters
     public function maximumBuyIn(): Chips
     {
         return $this->maximumBuyIn ?? Chips::zero();
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'gameId' => $this->gameId(),
+            'smallBlind' => $this->smallBlind,
+            'bigBlind' => $this->bigBlind,
+            'tableSize' => $this->tableSize,
+            'minimumBuyIn' => $this->minimumBuyIn,
+            'maximumBuyIn' => $this->maximumBuyIn
+
+        ];
     }
 }

@@ -6,8 +6,9 @@ use Cysha\Casino\Cards\CardCollection;
 use Cysha\Casino\Game\Chips;
 use Cysha\Casino\Game\Contracts\Name as NameContract;
 use InvalidArgumentException;
+use JsonSerializable;
 
-class Action
+class Action implements JsonSerializable
 {
     const DEALT_RIVER = 9;
     const DEALT_TURN = 8;
@@ -136,5 +137,14 @@ class Action
     public function __toString()
     {
         return $this->toString();
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'player' => $this->player != null ? $this->player->jsonSerialize() : null,
+            'action' => $this->action,
+            'chips' => $this->chips != null ? $this->chips->jsonSerialize() : null,
+        ];
     }
 }

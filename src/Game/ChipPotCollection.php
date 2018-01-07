@@ -4,8 +4,9 @@ namespace Cysha\Casino\Holdem\Game;
 
 use Cysha\Casino\Game\Chips;
 use Illuminate\Support\Collection;
+use JsonSerializable;
 
-class ChipPotCollection extends Collection
+class ChipPotCollection extends Collection implements JsonSerializable
 {
     /**
      * @return Chips
