@@ -206,6 +206,7 @@ class Table extends BaseTable implements JsonSerializable
     {
         return [
             'id' => $this->id()->toString(),
+            'button' => $this->button,
             'players' => $this->players != null ? $this->players->jsonSerialize() : null,
             'playersSatOut' => $this->playersSatOut != null ? $this->playersSatOut->jsonSerialize() : null,
         ];
