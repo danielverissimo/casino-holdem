@@ -5,8 +5,9 @@ namespace Cysha\Casino\Holdem\Game;
 use Cysha\Casino\Game\Contracts\Player;
 use Cysha\Casino\Game\PlayerCollection;
 use Illuminate\Support\Collection;
+use JsonSerializable;
 
-class LeftToAct extends Collection
+class LeftToAct extends Collection implements JsonSerializable
 {
     const BIG_BLIND = 6;
     const SMALL_BLIND = 5;
@@ -193,5 +194,10 @@ class LeftToAct extends Collection
     public function getNextPlayer()
     {
         return $this->getRemainingPlayers()->first();
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->all();
     }
 }
