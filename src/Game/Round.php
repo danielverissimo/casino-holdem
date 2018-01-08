@@ -763,9 +763,11 @@ class Round implements JsonSerializable
             'chipPots' => $this->chipPots != null ? $this->chipPots->jsonSerialize() : null,
             'currentPot' => $this->currentPot != null ? $this->currentPot->jsonSerialize() : null,
             'actions' => $this->actions != null ? $this->actions->jsonSerialize() : null,
-            'actions' => $this->actions != null ? $this->actions->jsonSerialize() : null,
             'leftToAct' => $this->leftToAct != null ? $this->leftToAct->jsonSerialize() : null,
             'gameRules' => $this->gameRules != null ? $this->gameRules->jsonSerialize() : null,
+            'playerWithButton' => $this->playerWithButton() != null ? $this->playerWithButton()->jsonSerialize() : null,
+            'playerWithSmallBlind' => $this->playerWithSmallBlind() != null ? $this->playerWithSmallBlind()->jsonSerialize() : null,
+            'playerWithBigBlind' => $this->playerWithBigBlind() != null ? $this->playerWithBigBlind()->jsonSerialize() : null,
         ];
     }
 }
