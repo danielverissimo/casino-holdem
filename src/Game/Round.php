@@ -755,6 +755,11 @@ class Round implements JsonSerializable
 
     function jsonSerialize()
     {
+
+        $playerWithButton = $this->playerWithButton();
+        $playerWithSmallBlind = $this->playerWithSmallBlind();
+        $playerWithBigBlind = $this->playerWithBigBlind();
+
         return [
             'id' => $this->id,
             'table' => $this->table != null ? $this->table->jsonSerialize() : null,
@@ -765,9 +770,9 @@ class Round implements JsonSerializable
             'actions' => $this->actions != null ? $this->actions->jsonSerialize() : null,
             'leftToAct' => $this->leftToAct != null ? $this->leftToAct->jsonSerialize() : null,
             'gameRules' => $this->gameRules != null ? $this->gameRules->jsonSerialize() : null,
-            'playerWithButton' => $this->playerWithButton() != null ? $this->playerWithButton()->jsonSerialize() : null,
-            'playerWithSmallBlind' => $this->playerWithSmallBlind() != null ? $this->playerWithSmallBlind()->jsonSerialize() : null,
-            'playerWithBigBlind' => $this->playerWithBigBlind() != null ? $this->playerWithBigBlind()->jsonSerialize() : null,
+            'playerWithButton' => $playerWithButton != null ? $playerWithButton->jsonSerialize() : null,
+            'playerWithSmallBlind' => $playerWithSmallBlind != null ? $playerWithSmallBlind->jsonSerialize() : null,
+            'playerWithBigBlind' => $playerWithBigBlind != null ? $playerWithBigBlind->jsonSerialize() : null
         ];
     }
 }
