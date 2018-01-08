@@ -30,6 +30,7 @@ class LeftToAct extends Collection implements JsonSerializable
             return [
                 'seat' => $seatNumber,
                 'player' => $player->name(),
+                'player_id' => $player->id(),
                 'action' => self::STILL_TO_ACT,
             ];
         });
