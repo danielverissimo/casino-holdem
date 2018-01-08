@@ -10,9 +10,8 @@ use Cysha\Casino\Game\Contracts\GameParameters;
 use Cysha\Casino\Game\Contracts\Player as PlayerContract;
 use Cysha\Casino\Game\PlayerCollection;
 use Cysha\Casino\Holdem\Exceptions\RoundException;
-use Cysha\Casino\Holdem\Game\LeftToAct;
-use Ramsey\Uuid\Uuid;
 use JsonSerializable;
+use Ramsey\Uuid\Uuid;
 
 class Round implements JsonSerializable
 {
