@@ -74,7 +74,6 @@ class Player extends Client implements PlayerContract, JsonSerializable
         return [
             'id' => $this->id(),
             'name' => $this->name(),
-            //'wallet' => $this->wallet()->jsonSerialize(),
             'chipStack' => $this->chipStack()->jsonSerialize()
         ];
     }

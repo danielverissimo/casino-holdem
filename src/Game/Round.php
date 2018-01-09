@@ -61,6 +61,11 @@ class Round implements JsonSerializable
     private $gameRules;
 
     /**
+     * @var PlayerCollection
+     */
+    private $winningPlayers;
+
+    /**
      * Round constructor.
      *
      * @param Uuid $id
@@ -78,6 +83,7 @@ class Round implements JsonSerializable
         $this->actions = ActionCollection::make();
         $this->leftToAct = LeftToAct::make();
         $this->gameRules = $gameRules;
+        $this->winningPlayers = PlayerCollection::make();
 
         // shuffle the deck ready
         $this->dealer()->shuffleDeck();
@@ -151,11 +157,43 @@ class Round implements JsonSerializable
     }
 
     /**
+     * @return boolean
+     */
+    public function isPlayersRemainAllInn(): bool
+    {
+
+        $allInCount = 0;
+        $playersStillInCount = $this->playersStillIn()->count();
+
+        $this->actions()->reverse()->each(function (Action $action) use(&$allInCount){
+
+            if ( $action->action() === Action::ALLIN ){
+                $allInCount++;
+            }
+
+        });
+
+        if ( $playersStillInCount > 0 && $allInCount === $playersStillInCount ){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @return PlayerCollection
      */
     public function foldedPlayers(): PlayerCollection
     {
         return $this->foldedPlayers;
+    }
+
+    /**
+     * @return PlayerCollection
+     */
+    public function winningPlayers(): PlayerCollection
+    {
+        return $this->winningPlayers;
     }
 
     /**
@@ -227,9 +265,14 @@ class Round implements JsonSerializable
                 if ($chipPot->players()->count() === 1) {
                     $potTotal = $chipPot->chips()->total();
 
-                    $chipPot->players()->first()->chipStack()->add($potTotal);
+                    $player = $chipPot->players()->first();
+                    $player->chipStack()->add($potTotal);
 
                     $this->chipPots()->remove($chipPot);
+
+                    if ($this->winningPlayers()->findByName($player->name()) === null) {
+                        $this->winningPlayers->push($player);
+                    }
 
                     return;
                 }
@@ -247,6 +290,11 @@ class Round implements JsonSerializable
                     $player->chipStack()->add($potTotal);
 
                     $this->chipPots()->remove($chipPot);
+
+                    if ($this->winningPlayers()->findByName($player->name()) === null) {
+                        $this->winningPlayers->push($player);
+                    }
+
                 } else {
                     // if > 1 hand is evaluated as highest, split the pot evenly between the players
 
@@ -255,7 +303,14 @@ class Round implements JsonSerializable
                     // split the pot between the number of players
                     $splitTotal = Chips::fromAmount(($potTotal->amount() / $evaluate->count()));
                     $evaluate->each(function (CardResults $result) use ($splitTotal) {
-                        $result->hand()->player()->chipStack()->add($splitTotal);
+
+                        $player = $result->hand()->player();
+                        $player->chipStack()->add($splitTotal);
+
+                        if ($this->winningPlayers()->findByName($player->name()) === null) {
+                            $this->winningPlayers->push($player);
+                        }
+
                     });
 
                     $this->chipPots()->remove($chipPot);
@@ -524,6 +579,9 @@ class Round implements JsonSerializable
         if (($player = $this->whosTurnIsIt()) !== false) {
             throw RoundException::playerStillNeedsToAct($player);
         }
+//        if ($this->playersStillIn()->count() == 0){
+//            throw RoundException::hasNoPlayerIn();
+//        }
 
         $this->collectChipTotal();
 
@@ -759,12 +817,15 @@ class Round implements JsonSerializable
         $playerWithButton = $this->playerWithButton();
         $playerWithSmallBlind = $this->playerWithSmallBlind();
         $playerWithBigBlind = $this->playerWithBigBlind();
+        $communityCards = $this->dealer()->communityCards();
 
         return [
             'id' => $this->id,
             'table' => $this->table != null ? $this->table->jsonSerialize() : null,
             'betStacks' => $this->table != null ? $this->table->jsonSerialize() : null,
             'foldedPlayers' => $this->foldedPlayers != null ? $this->foldedPlayers->jsonSerialize() : null,
+            'playersStillIn' => $this->playersStillIn() != null ? $this->playersStillIn() : null,
+            'winningPlayers' => $this->winningPlayers != null ? $this->winningPlayers->jsonSerialize() : null,
             'chipPots' => $this->chipPots != null ? $this->chipPots->jsonSerialize() : null,
             'currentPot' => $this->currentPot != null ? $this->currentPot->jsonSerialize() : null,
             'actions' => $this->actions != null ? $this->actions->jsonSerialize() : null,
@@ -772,7 +833,9 @@ class Round implements JsonSerializable
             'gameRules' => $this->gameRules != null ? $this->gameRules->jsonSerialize() : null,
             'playerWithButton' => $playerWithButton != null ? $playerWithButton->jsonSerialize() : null,
             'playerWithSmallBlind' => $playerWithSmallBlind != null ? $playerWithSmallBlind->jsonSerialize() : null,
-            'playerWithBigBlind' => $playerWithBigBlind != null ? $playerWithBigBlind->jsonSerialize() : null
+            'playerWithBigBlind' => $playerWithBigBlind != null ? $playerWithBigBlind->jsonSerialize() : null,
+            'communityCards' => $communityCards != null ? $communityCards->jsonSerialize() : null,
+
         ];
     }
 }

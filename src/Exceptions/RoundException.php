@@ -158,4 +158,17 @@ class RoundException extends DomainException
 
         return new static($message);
     }
+
+    /**
+     * @param null|string $message
+     *
+     * @return static
+     */
+    public static function hasNoPlayerIn($message = null)
+    {
+        $defaultMessage = 'Has no player in to continue!';
+        $message = null === $message ? $defaultMessage : $message;
+
+        return new static($message);
+    }
 }
