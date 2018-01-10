@@ -341,25 +341,27 @@ class Round implements JsonSerializable
     /**
      * @return PlayerContract
      */
-    public function playerWithSmallBlind(): PlayerContract
+    public function playerWithSmallBlind(): ?PlayerContract
     {
         if ($this->table()->playersSatDown()->count() === 2) {
             return $this->table()->playersSatDown()->get(0);
         }
 
-        return $this->table()->playersSatDown()->get($this->table()->button() + 1);
+        $playersSatDown = $this->table()->playersSatDown();
+        return $playersSatDown->count() > 1 ? $playersSatDown->get($this->table()->button() + 1) : null;
     }
 
     /**
      * @return PlayerContract
      */
-    public function playerWithBigBlind(): PlayerContract
+    public function playerWithBigBlind(): ?PlayerContract
     {
         if ($this->table()->playersSatDown()->count() === 2) {
             return $this->table()->playersSatDown()->get(1);
         }
 
-        return $this->table()->playersSatDown()->get($this->table()->button() + 2);
+        $playersSatDown = $this->table()->playersSatDown();
+        return $playersSatDown->count() > 1 ? $playersSatDown->get($this->table()->button() + 2) : null;
     }
 
     /**
