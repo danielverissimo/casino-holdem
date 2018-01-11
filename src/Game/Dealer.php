@@ -132,9 +132,6 @@ class Dealer extends BaseDealer implements DealerContract
         for ($i = 0; $i < $cards; ++$i) {
             $this->communityCards()->push($this->dealCard());
         }
-
-        Log::info('communityCards');
-        Log::info($this->communityCards()->jsonSerialize());
     }
 
     /**

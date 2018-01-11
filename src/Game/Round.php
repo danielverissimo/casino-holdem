@@ -3,6 +3,7 @@
 namespace Cysha\Casino\Holdem\Game;
 
 use Cysha\Casino\Cards\Contracts\CardResults;
+use Cysha\Casino\Cards\HandCollection;
 use Cysha\Casino\Game\Chips;
 use Cysha\Casino\Game\ChipStackCollection;
 use Cysha\Casino\Game\Contracts\Dealer as DealerContract;
@@ -66,6 +67,11 @@ class Round implements JsonSerializable
     private $winningPlayers;
 
     /**
+     * @var HandCollection
+     */
+    private $showDownHands;
+
+    /**
      * Round constructor.
      *
      * @param Uuid $id
@@ -84,6 +90,7 @@ class Round implements JsonSerializable
         $this->leftToAct = LeftToAct::make();
         $this->gameRules = $gameRules;
         $this->winningPlayers = PlayerCollection::make();
+        $this->showDownHands = HandCollection::make();
 
         // shuffle the deck ready
         $this->dealer()->shuffleDeck();
@@ -115,6 +122,8 @@ class Round implements JsonSerializable
      */
     public function end()
     {
+        $this->showDownHands();
+
         $this->dealer()->checkCommunityCards();
 
         $this->collectChipTotal();
@@ -194,6 +203,19 @@ class Round implements JsonSerializable
     public function winningPlayers(): PlayerCollection
     {
         return $this->winningPlayers;
+    }
+
+    /**
+     * @return HandCollection
+     */
+    public function showDownHands()
+    {
+        if ( $this->playersStillIn()->count() > 1 ) {
+            $this->showDownHands = $this->playersStillIn()
+                ->map(function (Player $player) {
+                    return $this->table()->dealer()->playerHand($player);
+                });
+        }
     }
 
     /**
@@ -837,6 +859,7 @@ class Round implements JsonSerializable
             'playerWithSmallBlind' => $playerWithSmallBlind != null ? $playerWithSmallBlind->jsonSerialize() : null,
             'playerWithBigBlind' => $playerWithBigBlind != null ? $playerWithBigBlind->jsonSerialize() : null,
             'communityCards' => $communityCards != null ? $communityCards->jsonSerialize() : null,
+            'showDownHands' => $this->showDownHands != null ? $this->showDownHands->jsonSerialize() : null,
 
         ];
     }
