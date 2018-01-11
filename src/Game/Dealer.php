@@ -14,6 +14,7 @@ use Cysha\Casino\Game\Contracts\Player as PlayerContract;
 use Cysha\Casino\Game\Dealer as BaseDealer;
 use Cysha\Casino\Game\PlayerCollection;
 use Cysha\Casino\Holdem\Exceptions\RoundException;
+use Illuminate\Support\Facades\Log;
 
 class Dealer extends BaseDealer implements DealerContract
 {
@@ -131,6 +132,9 @@ class Dealer extends BaseDealer implements DealerContract
         for ($i = 0; $i < $cards; ++$i) {
             $this->communityCards()->push($this->dealCard());
         }
+
+        Log::info('communityCards');
+        Log::info($this->communityCards()->jsonSerialize());
     }
 
     /**

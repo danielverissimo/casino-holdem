@@ -4,10 +4,9 @@ namespace Cysha\Casino\Holdem\Game\Parameters;
 
 use Cysha\Casino\Game\Chips;
 use Cysha\Casino\Game\Contracts\GameParameters;
-use JsonSerializable;
 use Ramsey\Uuid\Uuid;
 
-class CashGameParameters extends DefaultParameters implements GameParameters, JsonSerializable
+class CashGameParameters extends DefaultParameters implements GameParameters
 {
     /**
      * @var Chips
