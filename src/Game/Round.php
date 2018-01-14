@@ -396,6 +396,13 @@ class Round implements JsonSerializable
             }else if ( $button > $this->table()->playersSatDown()->count() ){
                 $button = 1;
             }
+        }else{
+
+            $button++;
+            if ( $button >= $this->table()->playersSatDown()->count() ){
+                $button = 0;
+            }
+
         }
 
         $playersSatDown = $this->table()->playersSatDown();
