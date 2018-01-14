@@ -369,10 +369,13 @@ class Round implements JsonSerializable
      */
     public function playerWithSmallBlind(): ?PlayerContract
     {
-
         $button = $this->table()->button();
         if ($this->table()->playersSatDown()->count() > 2) {
             $button = $this->table()->button() + 1;
+        }
+
+        if ( $button >= $this->table()->playersSatDown()->count() ){
+            $button = 0;
         }
 
         $playersSatDown = $this->table()->playersSatDown();
@@ -387,6 +390,12 @@ class Round implements JsonSerializable
         $button = $this->table()->button();
         if ($this->table()->playersSatDown()->count() > 2) {
             $button = $this->table()->button() + 2;
+        }
+
+        if ( $button == $this->table()->playersSatDown()->count() ){
+            $button = 0;
+        }else if ( $button > $this->table()->playersSatDown()->count() ){
+            $button = 1;
         }
 
         $playersSatDown = $this->table()->playersSatDown();
@@ -812,7 +821,7 @@ class Round implements JsonSerializable
     private function setupLeftToAct()
     {
 
-        if ($this->players()->count() === 2) {
+        if ($this->table()->playersSatDown()->count() === 2) {
 
             if ( $this->dealer()->communityCards()->count() > 0 ){
 
