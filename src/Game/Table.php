@@ -2,12 +2,15 @@
 
 namespace Cysha\Casino\Holdem\Game;
 
+use Cysha\Casino\Cards\Contracts\CardEvaluator;
+use Cysha\Casino\Cards\Deck;
 use Cysha\Casino\Game\Client;
 use Cysha\Casino\Game\Contracts\Dealer as DealerContract;
 use Cysha\Casino\Game\Contracts\Player;
 use Cysha\Casino\Game\Contracts\Player as PlayerContract;
 use Cysha\Casino\Game\PlayerCollection;
 use Cysha\Casino\Game\Table as BaseTable;
+use Cysha\Casino\Holdem\Cards\Evaluators\SevenCard;
 use Cysha\Casino\Holdem\Exceptions\TableException;
 use Ramsey\Uuid\Uuid;
 use JsonSerializable;
@@ -200,6 +203,10 @@ class Table extends BaseTable implements JsonSerializable
                 return $player->name() === $client->name();
             })
             ->values();
+    }
+
+    public function dealerStartWork(Deck $deck, CardEvaluator $cardEvaluationRules){
+        $this->dealer = $this->dealer()->startWork(new Deck(), new SevenCard());
     }
 
     function jsonSerialize()

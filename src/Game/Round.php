@@ -365,12 +365,12 @@ class Round implements JsonSerializable
      */
     public function playerWithSmallBlind(): ?PlayerContract
     {
-        if ($this->table()->playersSatDown()->count() === 2) {
-            return $this->table()->playersSatDown()->get(0);
-        }
+//        if ($this->table()->playersSatDown()->count() === 2) {
+//            return $this->table()->playersSatDown()->get(0);
+//        }
 
         $playersSatDown = $this->table()->playersSatDown();
-        return $playersSatDown->count() > 1 ? $playersSatDown->get($this->table()->button() + 1) : null;
+        return $playersSatDown->count() > 1 ? $playersSatDown->get($this->table()->button()) : null;
     }
 
     /**
@@ -378,12 +378,19 @@ class Round implements JsonSerializable
      */
     public function playerWithBigBlind(): ?PlayerContract
     {
-        if ($this->table()->playersSatDown()->count() === 2) {
-            return $this->table()->playersSatDown()->get(1);
+//        if ($this->table()->playersSatDown()->count() === 2) {
+//            return $this->table()->playersSatDown()->get(1);
+//        }
+
+        $button = $this->table()->button();
+        if ($this->table()->playersSatDown()->count() === 2 && $button == 1) {
+            $button = 0;
+        }else{
+            $button = 1;
         }
 
         $playersSatDown = $this->table()->playersSatDown();
-        return $playersSatDown->count() > 1 ? $playersSatDown->get($this->table()->button() + 2) : null;
+        return $playersSatDown->count() > 1 ? $playersSatDown->get($button) : null;
     }
 
     /**
