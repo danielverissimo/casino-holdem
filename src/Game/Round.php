@@ -180,7 +180,7 @@ class Round implements JsonSerializable
 
         $this->actions()->reverse()->each(function (Action $action) use(&$allInCount){
 
-            if ( $action->action() === Action::ALLIN || $action->action() === Action::CALL ){
+            if ( $action->action() === Action::ALLIN ){
                 $allInCount++;
             }
 
@@ -818,10 +818,20 @@ class Round implements JsonSerializable
 
         if ($this->players()->count() === 2) {
 
-            if ( $this->dealer()->communityCards()->count() == 0 ){
+            if ( $this->dealer()->communityCards()->count() > 0 ){
+
+                $button = $this->table()->button() == 1 ? 0 : 1;
+
+                $this->leftToAct = $this->leftToAct
+                    ->setup($this->players())
+                    ->resetPlayerListFromSeat($button);
+
+            }else{
+
                 $this->leftToAct = $this->leftToAct()->setup($this->players())
                     ->resetPlayerListFromSeat($this->table()->button());
-                return;
+
+
             }
 
         }
