@@ -607,6 +607,11 @@ class Round implements JsonSerializable
         $this->collectChipTotal();
 
         $seat = $this->table()->findSeat($this->playerWithSmallBlind());
+
+        if ($this->table()->playersSatDown()->count() == 2) {
+            $seat++;
+        }
+
         $this->resetPlayerList($seat);
 
         $this->dealer()->dealCommunityCards(3);
@@ -633,6 +638,11 @@ class Round implements JsonSerializable
         $this->collectChipTotal();
 
         $seat = $this->table()->findSeat($this->playerWithSmallBlind());
+
+        if ($this->table()->playersSatDown()->count() == 2) {
+            $seat++;
+        }
+
         $this->resetPlayerList($seat);
 
         $this->dealer()->dealCommunityCards(1);
@@ -656,6 +666,11 @@ class Round implements JsonSerializable
         $this->collectChipTotal();
 
         $seat = $this->table()->findSeat($this->playerWithSmallBlind());
+
+        if ($this->table()->playersSatDown()->count() == 2) {
+            $seat++;
+        }
+        
         $this->resetPlayerList($seat);
 
         $this->dealer()->dealCommunityCards(1);
