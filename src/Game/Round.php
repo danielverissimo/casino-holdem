@@ -818,7 +818,8 @@ class Round implements JsonSerializable
         if ($this->players()->count() === 2) {
 
             if ( $this->dealer()->communityCards()->count() == 0 ){
-                $this->leftToAct = $this->leftToAct()->setup($this->players());
+                $this->leftToAct = $this->leftToAct()->setup($this->players())
+                    ->resetPlayerListFromSeat($this->table()->button());
                 return;
             }
 
