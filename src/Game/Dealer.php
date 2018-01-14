@@ -46,7 +46,7 @@ class Dealer extends BaseDealer implements DealerContract
     /**
      * Dealer constructor.
      *
-     * @param Deck $deck
+     * @param Deck          $deck
      * @param CardEvaluator $cardEvaluationRules
      */
     private function __construct(Deck $deck, CardEvaluator $cardEvaluationRules)
@@ -60,7 +60,7 @@ class Dealer extends BaseDealer implements DealerContract
     }
 
     /**
-     * @param Deck $deck
+     * @param Deck          $deck
      * @param CardEvaluator $cardEvaluationRules
      *
      * @return Dealer

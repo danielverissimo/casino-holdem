@@ -369,12 +369,14 @@ class Round implements JsonSerializable
      */
     public function playerWithSmallBlind(): ?PlayerContract
     {
-//        if ($this->table()->playersSatDown()->count() === 2) {
-//            return $this->table()->playersSatDown()->get(0);
-//        }
+
+        $button = $this->table()->button();
+        if ($this->table()->playersSatDown()->count() > 2) {
+            $button = $this->table()->button() + 1;
+        }
 
         $playersSatDown = $this->table()->playersSatDown();
-        return $playersSatDown->count() > 1 ? $playersSatDown->get($this->table()->button()) : null;
+        return $playersSatDown->count() > 1 ? $playersSatDown->get($button) : null;
     }
 
     /**
@@ -382,15 +384,9 @@ class Round implements JsonSerializable
      */
     public function playerWithBigBlind(): ?PlayerContract
     {
-//        if ($this->table()->playersSatDown()->count() === 2) {
-//            return $this->table()->playersSatDown()->get(1);
-//        }
-
         $button = $this->table()->button();
-        if ($this->table()->playersSatDown()->count() === 2 && $button == 1) {
-            $button = 0;
-        }else{
-            $button = 1;
+        if ($this->table()->playersSatDown()->count() > 2) {
+            $button = $this->table()->button() + 2;
         }
 
         $playersSatDown = $this->table()->playersSatDown();
@@ -831,7 +827,6 @@ class Round implements JsonSerializable
                 $this->leftToAct = $this->leftToAct()->setup($this->players())
                     ->resetPlayerListFromSeat($this->table()->button());
 
-
             }
 
             return;
@@ -843,52 +838,52 @@ class Round implements JsonSerializable
             ->resetPlayerListFromSeat($this->table()->button() + 1);
     }
 
-    /**
-     * @param PlayerContract $player
-     */
-    public function sitPlayerOut(PlayerContract $player)
-    {
-        $this->table()->sitPlayerOut($player);
-        $this->leftToAct = $this->leftToAct()->removePlayer($player);
-    }
+/**
+ * @param PlayerContract $player
+ */
+public function sitPlayerOut(PlayerContract $player)
+{
+    $this->table()->sitPlayerOut($player);
+    $this->leftToAct = $this->leftToAct()->removePlayer($player);
+}
 
-    /**
-     * @var int
-     */
-    public function resetPlayerList(int $seat)
-    {
-        $this->leftToAct = $this->leftToAct
-            ->resetActions()
-            ->sortBySeats()
-            ->resetPlayerListFromSeat($seat);
-    }
+/**
+ * @var int
+ */
+public function resetPlayerList(int $seat)
+{
+    $this->leftToAct = $this->leftToAct
+        ->resetActions()
+        ->sortBySeats()
+        ->resetPlayerListFromSeat($seat);
+}
 
-    function jsonSerialize()
-    {
+function jsonSerialize()
+{
 
-        $playerWithButton = $this->playerWithButton();
-        $playerWithSmallBlind = $this->playerWithSmallBlind();
-        $playerWithBigBlind = $this->playerWithBigBlind();
-        $communityCards = $this->dealer()->communityCards();
+    $playerWithButton = $this->playerWithButton();
+    $playerWithSmallBlind = $this->playerWithSmallBlind();
+    $playerWithBigBlind = $this->playerWithBigBlind();
+    $communityCards = $this->dealer()->communityCards();
 
-        return [
-            'id' => $this->id,
-            'table' => $this->table != null ? $this->table->jsonSerialize() : null,
-            'betStacks' => $this->table != null ? $this->table->jsonSerialize() : null,
-            'foldedPlayers' => $this->foldedPlayers != null ? $this->foldedPlayers->jsonSerialize() : null,
-            'playersStillIn' => $this->playersStillIn() != null ? $this->playersStillIn() : null,
-            'winningPlayers' => $this->winningPlayers != null ? $this->winningPlayers->jsonSerialize() : null,
-            'chipPots' => $this->chipPots != null ? $this->chipPots->jsonSerialize() : null,
-            'currentPot' => $this->currentPot != null ? $this->currentPot->jsonSerialize() : null,
-            'actions' => $this->actions != null ? $this->actions->jsonSerialize() : null,
-            'leftToAct' => $this->leftToAct != null ? $this->leftToAct->jsonSerialize() : null,
-            'gameRules' => $this->gameRules != null ? $this->gameRules->jsonSerialize() : null,
-            'playerWithButton' => $playerWithButton != null ? $playerWithButton->jsonSerialize() : null,
-            'playerWithSmallBlind' => $playerWithSmallBlind != null ? $playerWithSmallBlind->jsonSerialize() : null,
-            'playerWithBigBlind' => $playerWithBigBlind != null ? $playerWithBigBlind->jsonSerialize() : null,
-            'communityCards' => $communityCards != null ? $communityCards->jsonSerialize() : null,
-            'showDownHands' => $this->showDownHands != null ? $this->showDownHands->jsonSerialize() : null,
+    return [
+        'id' => $this->id,
+        'table' => $this->table != null ? $this->table->jsonSerialize() : null,
+        'betStacks' => $this->table != null ? $this->table->jsonSerialize() : null,
+        'foldedPlayers' => $this->foldedPlayers != null ? $this->foldedPlayers->jsonSerialize() : null,
+        'playersStillIn' => $this->playersStillIn() != null ? $this->playersStillIn() : null,
+        'winningPlayers' => $this->winningPlayers != null ? $this->winningPlayers->jsonSerialize() : null,
+        'chipPots' => $this->chipPots != null ? $this->chipPots->jsonSerialize() : null,
+        'currentPot' => $this->currentPot != null ? $this->currentPot->jsonSerialize() : null,
+        'actions' => $this->actions != null ? $this->actions->jsonSerialize() : null,
+        'leftToAct' => $this->leftToAct != null ? $this->leftToAct->jsonSerialize() : null,
+        'gameRules' => $this->gameRules != null ? $this->gameRules->jsonSerialize() : null,
+        'playerWithButton' => $playerWithButton != null ? $playerWithButton->jsonSerialize() : null,
+        'playerWithSmallBlind' => $playerWithSmallBlind != null ? $playerWithSmallBlind->jsonSerialize() : null,
+        'playerWithBigBlind' => $playerWithBigBlind != null ? $playerWithBigBlind->jsonSerialize() : null,
+        'communityCards' => $communityCards != null ? $communityCards->jsonSerialize() : null,
+        'showDownHands' => $this->showDownHands != null ? $this->showDownHands->jsonSerialize() : null,
 
-        ];
-    }
+    ];
+}
 }
