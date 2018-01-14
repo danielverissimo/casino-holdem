@@ -811,10 +811,14 @@ class Round implements JsonSerializable
      */
     private function setupLeftToAct()
     {
-        if ($this->players()->count() === 2) {
-            $this->leftToAct = $this->leftToAct()->setup($this->players());
 
-            return;
+        if ($this->players()->count() === 2) {
+
+            if ( $this->dealer()->communityCards()->count() == 0 ){
+                $this->leftToAct = $this->leftToAct()->setup($this->players());
+                return;
+            }
+
         }
 
         $this->leftToAct = $this->leftToAct

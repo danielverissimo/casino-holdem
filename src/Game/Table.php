@@ -118,6 +118,21 @@ class Table extends BaseTable implements JsonSerializable
     }
 
     /**
+     * @param PlayerContract $player
+     */
+    public function sitPlayerIn(PlayerContract $player)
+    {
+        $this->playersSatOut->each(function(PlayerContract $p, $index) use ($player){
+
+            if ( $player->id() === $p->id() ){
+                $this->playersSatOut->forget($index);
+                return;
+            }
+
+        });
+    }
+
+    /**
      * @return PlayerCollection
      */
     public function playersSatDown(): PlayerCollection
@@ -216,6 +231,7 @@ class Table extends BaseTable implements JsonSerializable
             'button' => $this->button,
             'players' => $this->players != null ? $this->players->jsonSerialize() : null,
             'playersSatOut' => $this->playersSatOut != null ? $this->playersSatOut->jsonSerialize() : null,
+            'playersSatDown' => $this->playersSatDown() != null ? $this->playersSatDown()->jsonSerialize() : null,
         ];
     }
 }
