@@ -3,6 +3,7 @@
 namespace Cysha\Casino\Holdem\Game;
 
 use Cysha\Casino\Cards\Contracts\CardResults;
+use Cysha\Casino\Cards\Deck;
 use Cysha\Casino\Cards\HandCollection;
 use Cysha\Casino\Game\Chips;
 use Cysha\Casino\Game\ChipStackCollection;
@@ -10,6 +11,7 @@ use Cysha\Casino\Game\Contracts\Dealer as DealerContract;
 use Cysha\Casino\Game\Contracts\GameParameters;
 use Cysha\Casino\Game\Contracts\Player as PlayerContract;
 use Cysha\Casino\Game\PlayerCollection;
+use Cysha\Casino\Holdem\Cards\Evaluators\SevenCard;
 use Cysha\Casino\Holdem\Exceptions\RoundException;
 use JsonSerializable;
 use Ramsey\Uuid\Uuid;
@@ -100,6 +102,7 @@ class Round implements JsonSerializable
 
         // init the betStacks and actions for each player
         $this->resetBetStacks();
+        $this->table()->dealerStartWork(new Deck(), new SevenCard());
         $this->setupLeftToAct();
     }
 
