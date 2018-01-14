@@ -180,7 +180,7 @@ class Round implements JsonSerializable
 
         $this->actions()->reverse()->each(function (Action $action) use(&$allInCount){
 
-            if ( $action->action() === Action::ALLIN ){
+            if ( $action->action() === Action::ALLIN || $action->action() === Action::CALL ){
                 $allInCount++;
             }
 
