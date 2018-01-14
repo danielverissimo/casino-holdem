@@ -95,6 +95,7 @@ class Round implements JsonSerializable
         $this->showDownHands = HandCollection::make();
 
         // shuffle the deck ready
+        $this->table()->dealerStartWork(new Deck(), new SevenCard());
         $this->dealer()->shuffleDeck();
 
         // add the default pot to the chipPots
@@ -102,7 +103,7 @@ class Round implements JsonSerializable
 
         // init the betStacks and actions for each player
         $this->resetBetStacks();
-        $this->table()->dealerStartWork(new Deck(), new SevenCard());
+
         $this->setupLeftToAct();
     }
 
