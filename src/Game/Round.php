@@ -166,7 +166,7 @@ class Round implements JsonSerializable
      */
     public function playersStillIn(): PlayerCollection
     {
-        return $this->table->playersSatDown()->diff($this->foldedPlayers());
+        return $this->table->playersSatDown()->diff($this->foldedPlayers())->values();
     }
 
     /**
@@ -670,7 +670,7 @@ class Round implements JsonSerializable
         if ($this->table()->playersSatDown()->count() == 2) {
             $seat++;
         }
-        
+
         $this->resetPlayerList($seat);
 
         $this->dealer()->dealCommunityCards(1);
