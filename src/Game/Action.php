@@ -7,6 +7,7 @@ use Cysha\Casino\Game\Chips;
 use Cysha\Casino\Game\Contracts\Name as NameContract;
 use InvalidArgumentException;
 use JsonSerializable;
+use Ramsey\Uuid\Uuid;
 
 class Action implements JsonSerializable
 {
@@ -22,6 +23,11 @@ class Action implements JsonSerializable
     const RAISE = 2;
     const CALL = 1;
     const CHECK = 0;
+
+    /**
+     * @var Uuid
+     */
+    private $id;
 
     /**
      * @var
@@ -40,6 +46,8 @@ class Action implements JsonSerializable
 
     public function __construct(NameContract $player, int $action, $attributes = [])
     {
+        $this->id = Uuid::uuid4();
+
         if (isset($attributes['chips']) && !($attributes['chips'] instanceof Chips)) {
             throw new InvalidArgumentException('Chip attribute should be instance of Chips');
         }
@@ -52,6 +60,14 @@ class Action implements JsonSerializable
         $this->action = $action;
         $this->communityCards = $attributes['communityCards'] ?? CardCollection::make();
         $this->chips = $attributes['chips'] ?? Chips::zero();
+    }
+
+    /**
+     * @return Uuid
+     */
+    public function id(): Uuid
+    {
+        return $this->id;
     }
 
     /**
@@ -142,6 +158,7 @@ class Action implements JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'id' => $this->id()->toString(),
             'player' => $this->player != null ? $this->player->jsonSerialize() : null,
             'action' => $this->action,
             'chips' => $this->chips != null ? $this->chips->jsonSerialize() : null,

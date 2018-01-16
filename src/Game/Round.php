@@ -230,6 +230,17 @@ class Round implements JsonSerializable
         return $this->actions;
     }
 
+
+    public function playerActionAfterIndex($playerId, $lastIndex){
+
+        return $this->actions()->each(function(Action $action, $index) use($playerId, $lastIndex){
+            if ( (int)$playerId === $action->player()->id() && $index > $lastIndex){
+                return true;
+            }
+        })->keys()->first();
+
+    }
+
     /**
      * @return LeftToAct
      */
@@ -359,7 +370,7 @@ class Round implements JsonSerializable
     /**
      * @return PlayerContract
      */
-    public function playerWithButton(): PlayerContract
+    public function playerWithButton(): ?PlayerContract
     {
         return $this->table()->locatePlayerWithButton();
     }
@@ -896,13 +907,14 @@ function jsonSerialize()
     $playerWithSmallBlind = $this->playerWithSmallBlind();
     $playerWithBigBlind = $this->playerWithBigBlind();
     $communityCards = $this->dealer()->communityCards();
+    $playersStillIn = $this->playersStillIn();
 
     return [
         'id' => $this->id,
         'table' => $this->table != null ? $this->table->jsonSerialize() : null,
         'betStacks' => $this->table != null ? $this->table->jsonSerialize() : null,
         'foldedPlayers' => $this->foldedPlayers != null ? $this->foldedPlayers->jsonSerialize() : null,
-        'playersStillIn' => $this->playersStillIn() != null ? $this->playersStillIn() : null,
+        'playersStillIn' => $playersStillIn != null ? $playersStillIn : null,
         'winningPlayers' => $this->winningPlayers != null ? $this->winningPlayers->jsonSerialize() : null,
         'chipPots' => $this->chipPots != null ? $this->chipPots->jsonSerialize() : null,
         'currentPot' => $this->currentPot != null ? $this->currentPot->jsonSerialize() : null,
