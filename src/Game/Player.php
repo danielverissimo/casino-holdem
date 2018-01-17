@@ -15,6 +15,11 @@ class Player extends Client implements PlayerContract, JsonSerializable
     private $chipStack;
 
     /**
+     * @var Chips
+     */
+    private $stackWin;
+
+    /**
      * PlayerTest constructor.
      *
      * @param string $name
@@ -25,6 +30,7 @@ class Player extends Client implements PlayerContract, JsonSerializable
         parent::__construct($id, $name, $wallet);
 
         $this->chipStack = $chips ?? Chips::zero();
+        $this->stackWin = Chips::zero();
     }
 
     /**
@@ -61,6 +67,14 @@ class Player extends Client implements PlayerContract, JsonSerializable
     }
 
     /**
+     * @return Chips
+     */
+    public function stackWin(): Chips
+    {
+        return $this->stackWin;
+    }
+
+    /**
      * @param Chips $chips
      */
     public function bet(Chips $chips)
@@ -74,7 +88,8 @@ class Player extends Client implements PlayerContract, JsonSerializable
         return [
             'id' => $this->id(),
             'name' => $this->name(),
-            'chipStack' => $this->chipStack()->jsonSerialize()
+            'chipStack' => $this->chipStack()->jsonSerialize(),
+            'stackWin' => $this->stackWin()->jsonSerialize()
         ];
     }
 }

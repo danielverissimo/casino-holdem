@@ -234,7 +234,8 @@ class Round implements JsonSerializable
     public function playerActionAfterIndex($playerId, $lastIndex){
 
         return $this->actions()->each(function(Action $action, $index) use($playerId, $lastIndex){
-            if ( (int)$playerId === $action->player()->id() && $index > $lastIndex){
+            $player = $action->player();
+            if ( $player instanceof Player && ((int)$playerId) === $player->id() && $index > $lastIndex ){
                 return true;
             }
         })->keys()->first();
@@ -304,11 +305,12 @@ class Round implements JsonSerializable
 
                     $player = $chipPot->players()->first();
                     $player->chipStack()->add($potTotal);
+                    $player->stackWin()->add($potTotal);
 
                     $this->chipPots()->remove($chipPot);
 
                     if ($this->winningPlayers()->findByName($player->name()) === null) {
-                        $this->winningPlayers->push($player);
+                        $this->player->push($player);
                     }
 
                     return;
@@ -325,6 +327,7 @@ class Round implements JsonSerializable
                     $potTotal = $chipPot->chips()->total();
 
                     $player->chipStack()->add($potTotal);
+                    $player->stackWin()->add($potTotal);
 
                     $this->chipPots()->remove($chipPot);
 
@@ -343,6 +346,7 @@ class Round implements JsonSerializable
 
                         $player = $result->hand()->player();
                         $player->chipStack()->add($splitTotal);
+                        $player->stackWin()->add($splitTotal);
 
                         if ($this->winningPlayers()->findByName($player->name()) === null) {
                             $this->winningPlayers->push($player);
@@ -372,6 +376,8 @@ class Round implements JsonSerializable
      */
     public function playerWithButton(): ?PlayerContract
     {
+        // TODO para cache game trocar players() para playersSatDown()
+
         return $this->table()->locatePlayerWithButton();
     }
 
@@ -380,16 +386,18 @@ class Round implements JsonSerializable
      */
     public function playerWithSmallBlind(): ?PlayerContract
     {
+        // TODO para cache game trocar players() para playersSatDown()
+
         $button = $this->table()->button();
-        if ($this->table()->playersSatDown()->count() > 2) {
+        if ($this->table()->players()->count() > 2) {
             $button = $this->table()->button() + 1;
 
-            if ( $button >= $this->table()->playersSatDown()->count() ){
+            if ( $button >= $this->table()->players()->count() ){
                 $button = 0;
             }
         }
 
-        $playersSatDown = $this->table()->playersSatDown();
+        $playersSatDown = $this->table()->players();
         return $playersSatDown->count() > 1 ? $playersSatDown->get($button) : null;
     }
 
@@ -398,25 +406,27 @@ class Round implements JsonSerializable
      */
     public function playerWithBigBlind(): ?PlayerContract
     {
+        // TODO para cache game trocar players() para playersSatDown()
+
         $button = $this->table()->button();
-        if ($this->table()->playersSatDown()->count() > 2) {
+        if ($this->table()->players()->count() > 2) {
             $button = $this->table()->button() + 2;
 
-            if ( $button == $this->table()->playersSatDown()->count() ){
+            if ( $button == $this->table()->players()->count() ){
                 $button = 0;
-            }else if ( $button > $this->table()->playersSatDown()->count() ){
+            }else if ( $button > $this->table()->players()->count() ){
                 $button = 1;
             }
         }else{
 
             $button++;
-            if ( $button >= $this->table()->playersSatDown()->count() ){
+            if ( $button >= $this->table()->players()->count() ){
                 $button = 0;
             }
 
         }
 
-        $playersSatDown = $this->table()->playersSatDown();
+        $playersSatDown = $this->table()->players();
         return $playersSatDown->count() > 1 ? $playersSatDown->get($button) : null;
     }
 

@@ -116,6 +116,8 @@ class ChipPot implements JsonSerializable
     {
         return [
             'chips' => $this->totalAmount(),
+            'chips2' => $this->chips()->jsonSerialize(),
+            'players' => $this->players()->jsonSerialize(),
         ];
     }
 }

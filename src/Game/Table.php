@@ -106,7 +106,7 @@ class Table extends BaseTable implements JsonSerializable
      */
     public function locatePlayerWithButton(): ?PlayerContract
     {
-        return $this->playersSatDown()->get($this->button);
+        return $this->players()->get($this->button);
     }
 
     /**
