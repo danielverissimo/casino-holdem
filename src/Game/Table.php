@@ -12,8 +12,8 @@ use Cysha\Casino\Game\PlayerCollection;
 use Cysha\Casino\Game\Table as BaseTable;
 use Cysha\Casino\Holdem\Cards\Evaluators\SevenCard;
 use Cysha\Casino\Holdem\Exceptions\TableException;
-use Ramsey\Uuid\Uuid;
 use JsonSerializable;
+use Ramsey\Uuid\Uuid;
 
 class Table extends BaseTable implements JsonSerializable
 {

@@ -194,6 +194,28 @@ class Round implements JsonSerializable
     }
 
     /**
+     * @return boolean
+     */
+    public function playerWithoutMoney(): bool
+    {
+
+        $playerQtdy = $this->playersStillIn()->count();
+        $this->playersStillIn()->each(function(Player $player) use(&$playerQtdy){
+
+           if ( $player->chipStack()->amount() === 0 ){
+               $playerQtdy--;
+           }
+
+        });
+
+        if ( $playerQtdy <= 1){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @return PlayerCollection
      */
     public function foldedPlayers(): PlayerCollection

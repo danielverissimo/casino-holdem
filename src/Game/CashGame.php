@@ -44,6 +44,11 @@ final class CashGame implements Game, JsonSerializable
     protected $tables;
 
     /**
+     * @var int
+     */
+    private $timeElapsed = 0;
+
+    /**
      * CashGame constructor.
      *
      * @param UuidInterface  $id
