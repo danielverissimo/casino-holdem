@@ -12,9 +12,9 @@ use Cysha\Casino\Game\PlayerCollection;
 use Cysha\Casino\Game\TableCollection;
 use Cysha\Casino\Holdem\Cards\Evaluators\SevenCard;
 use Cysha\Casino\Holdem\Exceptions\TableException;
+use JsonSerializable;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
-use JsonSerializable;
 
 final class CashGame implements Game, JsonSerializable
 {
@@ -42,11 +42,6 @@ final class CashGame implements Game, JsonSerializable
      * @var TableCollection
      */
     protected $tables;
-
-    /**
-     * @var int
-     */
-    private $timeElapsed = 0;
 
     /**
      * CashGame constructor.
@@ -123,6 +118,7 @@ final class CashGame implements Game, JsonSerializable
     {
         return $this->tables;
     }
+
 
     /**
      * @param Client $client

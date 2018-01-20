@@ -196,7 +196,7 @@ class Round implements JsonSerializable
     /**
      * @return boolean
      */
-    public function playerWithoutMoney(): bool
+    public function lessThenOnePlayerWithChip(): bool
     {
 
         $playerQtdy = $this->playersStillIn()->count();
@@ -332,7 +332,7 @@ class Round implements JsonSerializable
                     $this->chipPots()->remove($chipPot);
 
                     if ($this->winningPlayers()->findByName($player->name()) === null) {
-                        $this->player->push($player);
+                        $this->winningPlayers->push($player);
                     }
 
                     return;

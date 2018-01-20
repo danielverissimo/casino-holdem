@@ -2,6 +2,7 @@
 
 namespace Cysha\Casino\Holdem\Game\Parameters;
 
+use Carbon\Carbon;
 use Cysha\Casino\Game\Chips;
 use Cysha\Casino\Game\Contracts\GameParameters;
 use Cysha\Casino\Holdem\Exceptions\GameParametersException;
@@ -29,7 +30,27 @@ class DefaultParameters implements GameParameters
      */
     private $tableSize = 9;
 
-    public function __construct(Uuid $gameId, Chips $bigBlind, Chips $smallBlind = null, int $tableSize = 9)
+    /**
+     * @var int
+     */
+    private $currentLevel = 0;
+
+    /**
+     * @var int
+     */
+    private $maxLevelRebuy;
+
+    /**
+     * @var String
+     */
+    private $gameStartedAt;
+
+    /**
+     * @var String
+     */
+    private $lastLevelStartedAt;
+
+    public function __construct(Uuid $gameId, Chips $bigBlind, Chips $smallBlind = null, int $tableSize = 9, int $maxLevelRebuy = 0)
     {
         if ($tableSize < 2) {
             throw GameParametersException::invalidArgument(sprintf('Invalid tableSize given, minimum of 2 expected, received %d', $tableSize));
@@ -43,10 +64,14 @@ class DefaultParameters implements GameParameters
             $smallBlind = null;
         }
 
+        $this->lastLevelStartedAt = Carbon::now();
+        $this->gameStartedAt = $this->lastLevelStartedAt;
+
         $this->gameId = $gameId;
         $this->bigBlind = $bigBlind;
         $this->smallBlind = $smallBlind;
         $this->tableSize = $tableSize;
+        $this->maxLevelRebuy = $maxLevelRebuy;
     }
 
     /**
@@ -63,6 +88,66 @@ class DefaultParameters implements GameParameters
     public function bigBlind(): Chips
     {
         return $this->bigBlind;
+    }
+
+    /**
+     * @return int
+     */
+    public function maxLevelRebuy(): int
+    {
+        return $this->maxLevelRebuy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function lastLevelStartedAt()
+    {
+        return Carbon::parse($this->lastLevelStartedAt);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function renewLastLevelStartedAt()
+    {
+        $this->lastLevelStartedAt = Carbon::now();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function gameStartedAt()
+    {
+        return Carbon::parse($this->gameStartedAt);
+    }
+
+    /**
+     * @param $smallBlind
+     */
+    public function setSmallBlind($smallBlind){
+        $this->smallBlind = $smallBlind;
+    }
+
+    /**
+     * @param $bigBlind
+     */
+    public function setBigBlind($bigBlind){
+        $this->bigBlind = $bigBlind;
+    }
+
+    /**
+     * @return int
+     */
+    public function currentLevel(){
+        return $this->currentLevel;
+    }
+
+    /**
+     * Increment current level.
+     */
+    public function incrementCurrentLevel(){
+        $this->currentLevel++;
     }
 
     /**
