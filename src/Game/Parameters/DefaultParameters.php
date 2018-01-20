@@ -177,7 +177,11 @@ class DefaultParameters implements GameParameters
             'gameId' => $this->gameId,
             'smallBlind' => $this->smallBlind,
             'bigBlind' => $this->bigBlind,
-            'tableSize' => $this->tableSize
+            'tableSize' => $this->tableSize,
+            'currentLevel' => $this->currentLevel,
+            'maxLevelRebuy' => $this->maxLevelRebuy,
+            'gameStartedAt' => $this->gameStartedAt,
+            'lastLevelStartedAt' => $this->lastLevelStartedAt
         ];
     }
 }
