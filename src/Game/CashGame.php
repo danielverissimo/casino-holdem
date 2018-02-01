@@ -51,7 +51,7 @@ final class CashGame implements Game, JsonSerializable
     /**
      * @var Round
      */
-    private $actualRound;
+    private $currentRound;
 
     /**
      * CashGame constructor.
@@ -143,11 +143,19 @@ final class CashGame implements Game, JsonSerializable
     }
 
     /**
+     * @return Round
+     */
+    public function currentRound(): Round
+    {
+        return $this->currentRound;
+    }
+
+    /**
      * @param Round $round
      */
-    public function setActualRound(Round $round)
+    public function setCurrentRound(Round $round)
     {
-        $this->actualRound = $round;
+        $this->currentRound = $round;
     }
 
     /**
