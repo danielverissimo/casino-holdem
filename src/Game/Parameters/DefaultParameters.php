@@ -46,11 +46,21 @@ class DefaultParameters implements GameParameters
     private $gameStartedAt;
 
     /**
+     * @var int
+     */
+    private $buyIn;
+
+    /**
+     * @var int
+     */
+    private $startChip;
+
+    /**
      * @var String
      */
     private $lastLevelStartedAt;
 
-    public function __construct(Uuid $gameId, Chips $bigBlind, Chips $smallBlind = null, int $tableSize = 9, int $maxLevelRebuy = 0)
+    public function __construct(Uuid $gameId, Chips $bigBlind, Chips $smallBlind = null, int $tableSize = 9, int $maxLevelRebuy = 0, int $buyIn = 0, $startChip = 0)
     {
         if ($tableSize < 2) {
             throw GameParametersException::invalidArgument(sprintf('Invalid tableSize given, minimum of 2 expected, received %d', $tableSize));
@@ -72,6 +82,8 @@ class DefaultParameters implements GameParameters
         $this->smallBlind = $smallBlind;
         $this->tableSize = $tableSize;
         $this->maxLevelRebuy = $maxLevelRebuy;
+        $this->buyIn = $buyIn;
+        $this->startChip = $startChip;
     }
 
     /**
@@ -96,6 +108,22 @@ class DefaultParameters implements GameParameters
     public function maxLevelRebuy(): int
     {
         return $this->maxLevelRebuy;
+    }
+
+    /**
+     * @return int
+     */
+    public function buyIn(): int
+    {
+        return $this->buyIn;
+    }
+
+    /**
+     * @return int
+     */
+    public function startChip(): int
+    {
+        return $this->startChip;
     }
 
     /**
@@ -161,6 +189,14 @@ class DefaultParameters implements GameParameters
         }
 
         return $this->smallBlind;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canRebuy(): bool
+    {
+        return $this->currentLevel <= $this->maxLevelRebuy;
     }
 
     /**

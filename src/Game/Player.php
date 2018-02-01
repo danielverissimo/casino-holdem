@@ -20,6 +20,11 @@ class Player extends Client implements PlayerContract, JsonSerializable
     private $stackWin;
 
     /**
+     * @var int
+     */
+    private $originalPosition;
+
+    /**
      * PlayerTest constructor.
      *
      * @param string $name
@@ -66,6 +71,11 @@ class Player extends Client implements PlayerContract, JsonSerializable
         return $this->chipStack;
     }
 
+    public function setChipStack($chipStack)
+    {
+        $this->chipStack = $chipStack;
+    }
+
     /**
      * @return Chips
      */
@@ -75,11 +85,26 @@ class Player extends Client implements PlayerContract, JsonSerializable
     }
 
     /**
+     * @return int
+     */
+    public function originalPosition(): int
+    {
+        return $this->originalPosition;
+    }
+
+    /**
+     * @param $originalPosition
+     */
+    public function setOriginalPosition($originalPosition)
+    {
+        $this->originalPosition = $originalPosition;
+    }
+
+    /**
      * @param Chips $chips
      */
     public function bet(Chips $chips)
     {
-//        Assertion::greaterOrEqualThan($chips->amount(), 0);
         $this->chipStack()->subtract($chips);
     }
 

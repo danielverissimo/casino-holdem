@@ -43,6 +43,11 @@ class Table extends BaseTable implements JsonSerializable
     private $button = 0;
 
     /**
+     * @var PlayerCollection
+     */
+    private $playersWaitToIn;
+
+    /**
      * Table constructor.
      *
      * @param Uuid $id
@@ -54,6 +59,7 @@ class Table extends BaseTable implements JsonSerializable
         $this->id = $id;
         $this->players = $players;
         $this->playersSatOut = PlayerCollection::make();
+        $this->playersWaitToIn = PlayerCollection::make();
         $this->dealer = $dealer;
     }
 
@@ -83,6 +89,33 @@ class Table extends BaseTable implements JsonSerializable
     public function players(): PlayerCollection
     {
         return $this->players;
+    }
+
+    /**
+     * @return PlayerCollection
+     */
+    public function playersWaitToIn(): PlayerCollection
+    {
+        return $this->playersWaitToIn;
+    }
+
+    public function removePlayersWaitToIn(Client $client)
+    {
+        $player = $this->playersWaitToIn()
+            ->filter(function (Player $player) use ($client) {
+                return $player->name() === $client->name();
+            })
+            ->first();
+
+        if ($player === null) {
+            throw TableException::notRegistered($client, $this);
+        }
+
+        $this->playersWaitToIn = $this->playersWaitToIn()
+            ->reject(function (Player $player) use ($client) {
+                return $player->name() === $client->name();
+            })
+            ->values();
     }
 
     /**

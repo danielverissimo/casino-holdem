@@ -44,6 +44,16 @@ final class CashGame implements Game, JsonSerializable
     protected $tables;
 
     /**
+     * @var PlayerCollection
+     */
+    private $playersHoldingRebuy;
+
+    /**
+     * @var Round
+     */
+    private $actualRound;
+
+    /**
      * CashGame constructor.
      *
      * @param UuidInterface  $id
@@ -57,6 +67,8 @@ final class CashGame implements Game, JsonSerializable
         $this->players = PlayerCollection::make();
         $this->tables = TableCollection::make();
         $this->rules = $rules;
+
+        $this->playersHoldingRebuy = PlayerCollection::make();
     }
 
     /**
@@ -101,6 +113,41 @@ final class CashGame implements Game, JsonSerializable
     public function players(): PlayerCollection
     {
         return $this->players;
+    }
+
+    /**
+     * @return PlayerCollection
+     */
+    public function playersHoldingRebuy(): PlayerCollection
+    {
+        return $this->playersHoldingRebuy;
+    }
+
+    /**
+     * @return PlayerCollection
+     */
+    public function addPlayerHoldingRebuy(Player $player)
+    {
+        return $this->playersHoldingRebuy->push($player);
+    }
+
+    /**
+     * @return PlayerCollection
+     */
+    public function removePlayerHoldingRebuy(Player $player)
+    {
+        $this->playersHoldingRebuy = $this->playersHoldingRebuy->reject(function (Player $value, $key) use($player){
+            return $value->id() === $player->id();
+        });
+
+    }
+
+    /**
+     * @param Round $round
+     */
+    public function setActualRound(Round $round)
+    {
+        $this->actualRound = $round;
     }
 
     /**
