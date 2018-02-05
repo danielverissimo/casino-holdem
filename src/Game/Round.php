@@ -252,7 +252,6 @@ class Round implements JsonSerializable
         return $this->actions;
     }
 
-
     public function playerActionAfterIndex($playerId, $lastIndex){
 
         return $this->actions()->each(function(Action $action, $index) use($playerId, $lastIndex){
@@ -401,6 +400,15 @@ class Round implements JsonSerializable
         // TODO para cache game trocar players() para playersSatDown()
 
         return $this->table()->locatePlayerWithButton();
+    }
+
+    public function findPlayerById($playerId): PlayerContract
+    {
+        return $this->players()
+            ->filter(function (PlayerContract $player) use ($playerId) {
+                return $player->id() === $playerId;
+            })
+            ->first();
     }
 
     /**
@@ -930,6 +938,11 @@ class Round implements JsonSerializable
             ->resetActions()
             ->sortBySeats()
             ->resetPlayerListFromSeat($seat);
+    }
+
+    public function setTable(Table $table)
+    {
+        $this->table = $table;
     }
 
     function jsonSerialize()

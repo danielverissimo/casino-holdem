@@ -196,7 +196,7 @@ class DefaultParameters implements GameParameters
      */
     public function canRebuy(): bool
     {
-        return $this->currentLevel <= $this->maxLevelRebuy;
+        return $this->maxLevelRebuy > 0 ? $this->currentLevel <= $this->maxLevelRebuy : false;
     }
 
     /**
