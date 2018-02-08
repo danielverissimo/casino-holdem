@@ -58,9 +58,9 @@ class Player extends Client implements PlayerContract, JsonSerializable
     {
         return static::class === get_class($object)
         && $this->id() === $object->id()
-        && $this->name() === $object->name()
-        && $this->wallet() === $object->wallet()
-        && $this->chipStack() === $object->chipStack();
+        && $this->name() === $object->name();
+//        && $this->wallet() === $object->wallet()
+//        && $this->chipStack() === $object->chipStack();
     }
 
     /**

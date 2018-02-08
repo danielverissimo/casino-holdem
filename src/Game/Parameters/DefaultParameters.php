@@ -33,7 +33,7 @@ class DefaultParameters implements GameParameters
     /**
      * @var int
      */
-    private $currentLevel = 0;
+    private $currentLevel = 1;
 
     /**
      * @var int
