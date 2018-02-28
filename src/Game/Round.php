@@ -2,6 +2,7 @@
 
 namespace Cysha\Casino\Holdem\Game;
 
+use Carbon\Carbon;
 use Cysha\Casino\Cards\Contracts\CardResults;
 use Cysha\Casino\Cards\Deck;
 use Cysha\Casino\Cards\HandCollection;
@@ -12,7 +13,10 @@ use Cysha\Casino\Game\Contracts\GameParameters;
 use Cysha\Casino\Game\Contracts\Player as PlayerContract;
 use Cysha\Casino\Game\PlayerCollection;
 use Cysha\Casino\Holdem\Cards\Evaluators\SevenCard;
+use Cysha\Casino\Holdem\Cards\Results\SevenCardResult;
+use Cysha\Casino\Holdem\Cards\SevenCardResultCollection;
 use Cysha\Casino\Holdem\Exceptions\RoundException;
+use Illuminate\Support\Facades\Log;
 use JsonSerializable;
 use Ramsey\Uuid\Uuid;
 
@@ -74,6 +78,16 @@ class Round implements JsonSerializable
     private $showDownHands;
 
     /**
+     * @var SevenCardResultCollection
+     */
+    private $evaluations;
+
+    /**
+     * @var Carbon
+     */
+    private $lastActionStartedAt;
+
+    /**
      * Round constructor.
      *
      * @param Uuid $id
@@ -93,6 +107,7 @@ class Round implements JsonSerializable
         $this->gameRules = $gameRules;
         $this->winningPlayers = PlayerCollection::make();
         $this->showDownHands = HandCollection::make();
+        $this->evaluations = SevenCardResultCollection::make();
 
         // shuffle the deck ready
         $this->table()->dealerStartWork(new Deck(), new SevenCard());
@@ -143,6 +158,11 @@ class Round implements JsonSerializable
     public function id(): Uuid
     {
         return $this->id;
+    }
+
+    public function setId($id)
+    {
+        return $this->id = $id;
     }
 
     /**
@@ -231,6 +251,11 @@ class Round implements JsonSerializable
         return $this->winningPlayers;
     }
 
+    public function resetWinningPlayers()
+    {
+         $this->winningPlayers = PlayerCollection::make();
+    }
+
     /**
      * @return HandCollection
      */
@@ -317,9 +342,14 @@ class Round implements JsonSerializable
      */
     private function distributeWinnings()
     {
+
+        Log::info('distributeWinnings - round_id: ' . $this->id);
+        Log::info('communityCards: ' . $this->dealer()->communityCards());
+
         $this->chipPots()
             ->reverse()
             ->each(function (ChipPot $chipPot) {
+
                 // if only 1 player participated to pot, he wins it no arguments
                 if ($chipPot->players()->count() === 1) {
                     $potTotal = $chipPot->chips()->total();
@@ -342,8 +372,18 @@ class Round implements JsonSerializable
                 $playerHands = $this->dealer()->hands()->findByPlayers($activePlayers);
                 $evaluate = $this->dealer()->evaluateHands($this->dealer()->communityCards(), $playerHands);
 
+                // Add evaluation message for all hands
+                $playerHands->each(function (HandCollection $results) {
+
+                    $results->each(function (SevenCardResult $hand) {
+                        $this->evaluations->push($hand);
+                    });
+
+                });
+
                 // if just 1, the player with that hand wins
                 if ($evaluate->count() === 1) {
+
                     $player = $evaluate->first()->hand()->player();
                     $potTotal = $chipPot->chips()->total();
 
@@ -356,9 +396,11 @@ class Round implements JsonSerializable
                         $this->winningPlayers->push($player);
                     }
 
-                } else {
-                    // if > 1 hand is evaluated as highest, split the pot evenly between the players
+                    Log::info('distributeWinnings (1): ' . $evaluate);
 
+                } else {
+
+                    // if > 1 hand is evaluated as highest, split the pot evenly between the players
                     $potTotal = $chipPot->chips()->total();
 
                     // split the pot between the number of players
@@ -378,6 +420,7 @@ class Round implements JsonSerializable
                     $this->chipPots()->remove($chipPot);
                 }
             });
+
     }
 
     /**
@@ -402,7 +445,7 @@ class Round implements JsonSerializable
         return $this->table()->locatePlayerWithButton();
     }
 
-    public function findPlayerById($playerId): PlayerContract
+    public function findPlayerById($playerId): ?PlayerContract
     {
         return $this->players()
             ->filter(function (PlayerContract $player) use ($playerId) {
@@ -891,7 +934,7 @@ class Round implements JsonSerializable
     /**
      * Reset the leftToAct collection.
      */
-    private function setupLeftToAct()
+    public function setupLeftToAct()
     {
 
         if ($this->table()->playersSatDown()->count() === 2) {
@@ -940,9 +983,12 @@ class Round implements JsonSerializable
             ->resetPlayerListFromSeat($seat);
     }
 
-    public function setTable(Table $table)
-    {
-        $this->table = $table;
+    public function lastActionStartedAt(){
+        return $this->lastActionStartedAt;
+    }
+
+    public function setLastActionStartedAt(Carbon $lastActionStartedAt){
+        $this->lastActionStartedAt = $lastActionStartedAt;
     }
 
     function jsonSerialize()
@@ -971,6 +1017,7 @@ class Round implements JsonSerializable
             'playerWithBigBlind' => $playerWithBigBlind != null ? $playerWithBigBlind->jsonSerialize() : null,
             'communityCards' => $communityCards != null ? $communityCards->jsonSerialize() : null,
             'showDownHands' => $this->showDownHands != null ? $this->showDownHands->jsonSerialize() : null,
+            'evaluations' => $this->evaluations != null ? $this->evaluations->jsonSerialize() : null,
         ];
     }
 }

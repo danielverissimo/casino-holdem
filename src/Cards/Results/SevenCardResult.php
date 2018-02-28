@@ -6,8 +6,9 @@ use Cysha\Casino\Cards\Card;
 use Cysha\Casino\Cards\CardCollection;
 use Cysha\Casino\Cards\Hand;
 use Cysha\Casino\Cards\Results\StandardCardResult;
+use JsonSerializable;
 
-class SevenCardResult extends StandardCardResult
+class SevenCardResult extends StandardCardResult implements JsonSerializable
 {
     const ROYAL_FLUSH = 9;
     const STRAIGHT_FLUSH = 8;
@@ -235,5 +236,13 @@ class SevenCardResult extends StandardCardResult
             $definition,
             $hand
         );
+    }
+
+    function jsonSerialize()
+    {
+        return [
+            'definition' => $this->definition(),
+            'player' => $this->hand()->player()
+        ];
     }
 }

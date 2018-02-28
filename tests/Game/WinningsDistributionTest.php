@@ -29,9 +29,9 @@ class WinningsDistributionTest extends BaseGameTestCase
     /** @test */
     public function winning_player_get_entire_pot_added_to_chipstack()
     {
-        $client1 = Client::register(Uuid::uuid4(), 'player1', Chips::fromAmount(5500));
-        $client2 = Client::register(Uuid::uuid4(), 'player2', Chips::fromAmount(5500));
-        $client3 = Client::register(Uuid::uuid4(), 'player3', Chips::fromAmount(5500));
+        $client1 = Client::register(1, 'player1', Chips::fromAmount(5500));
+        $client2 = Client::register(2, 'player2', Chips::fromAmount(5500));
+        $client3 = Client::register(3, 'player3', Chips::fromAmount(5500));
         $player1 = Player::fromClient($client1, Chips::fromAmount(5500));
         $player2 = Player::fromClient($client2, Chips::fromAmount(5500));
         $player3 = Player::fromClient($client3, Chips::fromAmount(5500));
@@ -128,11 +128,11 @@ class WinningsDistributionTest extends BaseGameTestCase
     public function scenario_1()
     {
         $players = PlayerCollection::make([
-            Player::fromClient(Client::register(Uuid::uuid4(), 'xLink', Chips::fromAmount(650)), Chips::fromAmount(2000)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'jesus', Chips::fromAmount(800)), Chips::fromAmount(300)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'melk', Chips::fromAmount(1200)), Chips::fromAmount(800)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'bob', Chips::fromAmount(1200)), Chips::fromAmount(150)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'blackburn', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
+            Player::fromClient(Client::register(1, 'xLink', Chips::fromAmount(650)), Chips::fromAmount(2000)),
+            Player::fromClient(Client::register(2, 'jesus', Chips::fromAmount(800)), Chips::fromAmount(300)),
+            Player::fromClient(Client::register(3, 'melk', Chips::fromAmount(1200)), Chips::fromAmount(800)),
+            Player::fromClient(Client::register(4, 'bob', Chips::fromAmount(1200)), Chips::fromAmount(150)),
+            Player::fromClient(Client::register(5, 'blackburn', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
         ]);
         $xLink = $players->get(0);
         $jesus = $players->get(1);
@@ -155,11 +155,11 @@ class WinningsDistributionTest extends BaseGameTestCase
     public function scenario_2()
     {
         $players = PlayerCollection::make([
-            Player::fromClient(Client::register(Uuid::uuid4(), 'xLink', Chips::fromAmount(650)), Chips::fromAmount(2000)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'jesus', Chips::fromAmount(800)), Chips::fromAmount(300)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'melk', Chips::fromAmount(1200)), Chips::fromAmount(800)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'bob', Chips::fromAmount(1200)), Chips::fromAmount(150)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'blackburn', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
+            Player::fromClient(Client::register(1, 'xLink', Chips::fromAmount(650)), Chips::fromAmount(2000)),
+            Player::fromClient(Client::register(2, 'jesus', Chips::fromAmount(800)), Chips::fromAmount(300)),
+            Player::fromClient(Client::register(3, 'melk', Chips::fromAmount(1200)), Chips::fromAmount(800)),
+            Player::fromClient(Client::register(4, 'bob', Chips::fromAmount(1200)), Chips::fromAmount(150)),
+            Player::fromClient(Client::register(5, 'blackburn', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
         ]);
         $xLink = $players->get(0);
         $jesus = $players->get(1);
@@ -182,11 +182,11 @@ class WinningsDistributionTest extends BaseGameTestCase
     public function scenario_3()
     {
         $players = PlayerCollection::make([
-            Player::fromClient(Client::register(Uuid::uuid4(), 'xLink', Chips::fromAmount(650)), Chips::fromAmount(2000)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'jesus', Chips::fromAmount(800)), Chips::fromAmount(300)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'melk', Chips::fromAmount(1200)), Chips::fromAmount(800)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'bob', Chips::fromAmount(1200)), Chips::fromAmount(150)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'blackburn', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
+            Player::fromClient(Client::register(1, 'xLink', Chips::fromAmount(650)), Chips::fromAmount(2000)),
+            Player::fromClient(Client::register(2, 'jesus', Chips::fromAmount(800)), Chips::fromAmount(300)),
+            Player::fromClient(Client::register(3, 'melk', Chips::fromAmount(1200)), Chips::fromAmount(800)),
+            Player::fromClient(Client::register(4, 'bob', Chips::fromAmount(1200)), Chips::fromAmount(150)),
+            Player::fromClient(Client::register(5, 'blackburn', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
         ]);
         $xLink = $players->get(0);
         $jesus = $players->get(1);
@@ -255,11 +255,11 @@ class WinningsDistributionTest extends BaseGameTestCase
     public function scenario_4()
     {
         $players = PlayerCollection::make([
-            Player::fromClient(Client::register(Uuid::uuid4(), 'xLink', Chips::fromAmount(650)), Chips::fromAmount(2000)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'jesus', Chips::fromAmount(800)), Chips::fromAmount(300)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'melk', Chips::fromAmount(1200)), Chips::fromAmount(800)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'bob', Chips::fromAmount(1200)), Chips::fromAmount(150)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'blackburn', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
+            Player::fromClient(Client::register(1, 'xLink', Chips::fromAmount(650)), Chips::fromAmount(2000)),
+            Player::fromClient(Client::register(1, 'jesus', Chips::fromAmount(800)), Chips::fromAmount(300)),
+            Player::fromClient(Client::register(3, 'melk', Chips::fromAmount(1200)), Chips::fromAmount(800)),
+            Player::fromClient(Client::register(4, 'bob', Chips::fromAmount(1200)), Chips::fromAmount(150)),
+            Player::fromClient(Client::register(5, 'blackburn', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
         ]);
         $xLink = $players->get(0);
         $jesus = $players->get(1);
@@ -323,11 +323,11 @@ class WinningsDistributionTest extends BaseGameTestCase
     public function scenario_5()
     {
         $players = PlayerCollection::make([
-            Player::fromClient(Client::register(Uuid::uuid4(), 'xLink', Chips::fromAmount(650)), Chips::fromAmount(2000)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'jesus', Chips::fromAmount(800)), Chips::fromAmount(300)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'melk', Chips::fromAmount(1200)), Chips::fromAmount(800)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'bob', Chips::fromAmount(1200)), Chips::fromAmount(150)),
-            Player::fromClient(Client::register(Uuid::uuid4(), 'blackburn', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
+            Player::fromClient(Client::register(1, 'xLink', Chips::fromAmount(650)), Chips::fromAmount(5000)),
+            Player::fromClient(Client::register(2, 'jesus', Chips::fromAmount(800)), Chips::fromAmount(5000)),
+            Player::fromClient(Client::register(3, 'melk', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
+            Player::fromClient(Client::register(4, 'bob', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
+            Player::fromClient(Client::register(5, 'blackburn', Chips::fromAmount(1200)), Chips::fromAmount(5000)),
         ]);
         $xLink = $players->get(0);
         $jesus = $players->get(1);
@@ -335,14 +335,14 @@ class WinningsDistributionTest extends BaseGameTestCase
         $bob = $players->get(3);
         $blackburn = $players->get(4);
 
-        $board = CardCollection::fromString('3s 3h 8h 2s 4c');
+        $board = CardCollection::fromString('As Ah Ah 2s 4c');
 
         $allHands = HandCollection::make([
-            Hand::fromString('Ts Td', $jesus),
+            Hand::fromString('5s Td', $jesus),
             Hand::fromString('7c 4d', $melk),
-            Hand::fromString('2c 5d', $bob),
+            Hand::fromString('Ac Ad', $bob),
             Hand::fromString('2h 3c', $blackburn),
-            Hand::fromString('Tc Th', $xLink),
+            Hand::fromString('5c Th', $xLink),
         ]);
 
         // Do game

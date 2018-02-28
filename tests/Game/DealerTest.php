@@ -321,4 +321,26 @@ class DealerTest extends BaseGameTestCase
         $expectedResult = SevenCardResult::createTwoPair($winningHand, $hand2);
         $this->assertEquals($expectedResult, $result->first());
     }
+
+    /** @test */
+    public function compare_2_hands()
+    {
+        $player1 = Player::fromClient(Client::register(1, 'player1', Chips::fromAmount(500)));
+        $player2 = Player::fromClient(Client::register(2, 'player2', Chips::fromAmount(500)));
+//        if (in_array($name, ['hearts', 'diamonds', 'clubs', 'spades'], true) !== false) {
+
+        $board = CardCollection::fromString('8s 8h 8c 5h js');
+        $hand1 = Hand::fromString('3c 6d', $player1);
+        $hand2 = Hand::fromString('8d Qc', $player2);
+
+        $dealer = Dealer::startWork(new Deck(), new SevenCard());
+
+        $result = $dealer->evaluateHands($board, HandCollection::make([
+            $hand1, $hand2,
+        ]));
+
+        $this->assertCount(1, $result);
+
+        dd($result->first());
+    }
 }

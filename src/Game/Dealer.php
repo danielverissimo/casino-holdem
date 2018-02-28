@@ -14,7 +14,6 @@ use Cysha\Casino\Game\Contracts\Player as PlayerContract;
 use Cysha\Casino\Game\Dealer as BaseDealer;
 use Cysha\Casino\Game\PlayerCollection;
 use Cysha\Casino\Holdem\Exceptions\RoundException;
-use Illuminate\Support\Facades\Log;
 
 class Dealer extends BaseDealer implements DealerContract
 {
@@ -144,6 +143,7 @@ class Dealer extends BaseDealer implements DealerContract
         }
 
         if ($this->communityCards()->count() === 0) {
+            //$hands = $this->cardEvaluationRules->calculateEquity($this->communityCards(), $this->hands(), $this->deck()->getCards());
             $this->dealCommunityCards(3);
         }
 
@@ -213,7 +213,7 @@ class Dealer extends BaseDealer implements DealerContract
      *
      * @return ResultCollection
      */
-    public function evaluateHands(CardCollection $board, HandCollection $playerHands): ResultCollection
+    public function evaluateHands(CardCollection $board, HandCollection &$playerHands): ResultCollection
     {
         return $this->cardEvaluationRules->evaluateHands($board, $playerHands);
     }

@@ -7,7 +7,7 @@ use Cysha\Casino\Game\Client;
 use Cysha\Casino\Game\Contracts\Game;
 use Cysha\Casino\Holdem\Game\CashGame;
 use Cysha\Casino\Holdem\Game\Parameters\CashGameParameters;
-use PHPUnit_Framework_TestCase as PHPUnit;
+use PHPUnit\Framework\TestCase as PHPUnit;
 use Ramsey\Uuid\Uuid;
 
 class BaseGameTestCase extends PHPUnit
@@ -21,7 +21,7 @@ class BaseGameTestCase extends PHPUnit
     {
         $players = [];
         for ($i = 0; $i < $playerCount; ++$i) {
-            $players[] = Client::register(Uuid::uuid4(), 'player' . ($i + 1), Chips::fromAmount(5500));
+            $players[] = Client::register($i+1, 'player' . ($i + 1), Chips::fromAmount(5500));
         }
 
         $gameRules = new CashGameParameters(Uuid::uuid4(), Chips::fromAmount(50), null, 9, Chips::fromAmount(500));

@@ -12,6 +12,8 @@ use Cysha\Casino\Cards\ResultCollection;
 use Cysha\Casino\Holdem\Cards\Results\SevenCardResult;
 use Cysha\Casino\Holdem\Cards\SevenCardResultCollection;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+use Ramsey\Uuid\Uuid;
 
 class SevenCard implements CardEvaluator
 {
@@ -24,6 +26,8 @@ class SevenCard implements CardEvaluator
     public static function evaluate(CardCollection $board, Hand $hand): CardResults
     {
         $cards = $board->merge($hand->cards());
+
+//        Log::info('cards: ' . $cards);
 
         if (($result = static::royalFlush($cards)) !== false) {
             return SevenCardResult::createRoyalFlush($result, $hand);
@@ -70,7 +74,7 @@ class SevenCard implements CardEvaluator
      *
      * @return ResultCollection
      */
-    public function evaluateHands(CardCollection $board, HandCollection $playerHands): ResultCollection
+    public function evaluateHands(CardCollection $board, HandCollection &$playerHands): ResultCollection
     {
         $playerHands = $playerHands
         // evaluate hands
@@ -105,6 +109,80 @@ class SevenCard implements CardEvaluator
         $winningResults = SevenCardResultCollection::make($handsAreEqual->first()->toArray());
 
         return $winningResults;
+    }
+
+    public function evaluateHandsEquity(CardCollection $board, HandCollection $playerHands): ResultCollection
+    {
+        $playerHands = $playerHands
+            // evaluate hands
+            ->map(function (Hand $hand) use ($board) {
+                return static::evaluate($board, $hand);
+            })
+
+            // sort the hands by their hand rank
+            ->sortByDesc(function (SevenCardResult $result) {
+                return [$result->rank(), $result->value()];
+            })
+
+            // group by the hand rank
+            ->groupBy(function (SevenCardResult $result) {
+                return $result->rank();
+            })
+
+            // sort the collection by the count
+            ->sortByDesc(function (Collection $collection) {
+                return $collection->count();
+            })
+        ;
+
+        // if all hands in the first collection are equal
+        $handsAreEqual = $playerHands
+            ->first()
+            ->groupBy(function (SevenCardResult $result) {
+                return array_sum($result->value());
+            })
+        ;
+
+        $winningResults = SevenCardResultCollection::make($handsAreEqual->first()->toArray());
+
+        return $winningResults;
+    }
+
+    public function calculateEquity(CardCollection $board, HandCollection $playerHands, $remainCards){
+
+        if ( $board->count() == 0 ){
+
+            $remainCardsCount = count($remainCards);
+
+            $j = 0;
+            while($j++ < 1000) {
+
+                $communityCards = CardCollection::make();
+
+                $communityCards->push($remainCards[rand(0, $remainCardsCount-1)]);
+                $communityCards->push($remainCards[rand(0, $remainCardsCount-1)]);
+                $communityCards->push($remainCards[rand(0, $remainCardsCount-1)]);
+                $communityCards->push($remainCards[rand(0, $remainCardsCount-1)]);
+                $communityCards->push($remainCards[rand(0, $remainCardsCount-1)]);
+
+                $evaluate = $this->evaluateHandsEquity($communityCards, $playerHands);
+
+                if ($evaluate->count() === 1) {
+
+                    $evaluate->first()->hand()->incrementWinCount();
+
+                } else {
+
+                    $evaluate->first()->hand()->incrementTieCount();
+
+                }
+
+            }
+
+        }
+
+        return $playerHands;
+
     }
 
     /**

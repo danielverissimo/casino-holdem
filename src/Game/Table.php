@@ -48,6 +48,11 @@ class Table extends BaseTable implements JsonSerializable
     private $playersWaitToIn;
 
     /**
+     * @var Round
+     */
+    private $currentRound;
+
+    /**
      * Table constructor.
      *
      * @param Uuid $id
@@ -205,6 +210,11 @@ class Table extends BaseTable implements JsonSerializable
         }
     }
 
+    public function setButton($button)
+    {
+        $this->button = $button;
+    }
+
     /**
      * @param PlayerContract $findPlayer
      *
@@ -255,6 +265,22 @@ class Table extends BaseTable implements JsonSerializable
 
     public function dealerStartWork(Deck $deck, CardEvaluator $cardEvaluationRules){
         $this->dealer = $this->dealer()->startWork(new Deck(), new SevenCard());
+    }
+
+    /**
+     * @return Round
+     */
+    public function currentRound(): ?Round
+    {
+        return $this->currentRound;
+    }
+
+    /**
+     * @param Round $round
+     */
+    public function setCurrentRound(Round $round)
+    {
+        $this->currentRound = $round;
     }
 
     function jsonSerialize()

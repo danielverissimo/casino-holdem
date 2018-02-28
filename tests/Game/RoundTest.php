@@ -4,7 +4,6 @@ namespace Cysha\Casino\Holdem\Tests\Game;
 
 use Cysha\Casino\Game\Chips;
 use Cysha\Casino\Game\Client;
-use Cysha\Casino\Game\Contracts\Game;
 use Cysha\Casino\Holdem\Game\Action;
 use Cysha\Casino\Holdem\Game\ActionCollection;
 use Cysha\Casino\Holdem\Game\CashGame;
@@ -152,11 +151,11 @@ class RoundTest extends BaseGameTestCase
     /** @test */
     public function button_will_start_on_first_sat_down_player()
     {
-        $xLink = Client::register(Uuid::uuid4(), 'xLink', Chips::fromAmount(5500));
-        $jesus = Client::register(Uuid::uuid4(), 'jesus', Chips::fromAmount(5500));
-        $melk = Client::register(Uuid::uuid4(), 'melk', Chips::fromAmount(5500));
-        $bob = Client::register(Uuid::uuid4(), 'bob', Chips::fromAmount(5500));
-        $blackburn = Client::register(Uuid::uuid4(), 'blackburn', Chips::fromAmount(5500));
+        $xLink = Client::register(1, 'xLink', Chips::fromAmount(5500));
+        $jesus = Client::register(2, 'jesus', Chips::fromAmount(5500));
+        $melk = Client::register(3, 'melk', Chips::fromAmount(5500));
+        $bob = Client::register(4, 'bob', Chips::fromAmount(5500));
+        $blackburn = Client::register(5, 'blackburn', Chips::fromAmount(5500));
 
         $gameRules = new CashGameParameters(Uuid::uuid4(), Chips::fromAmount(50), null, 9, Chips::fromAmount(500));
 
@@ -1317,8 +1316,8 @@ class RoundTest extends BaseGameTestCase
     /** @test */
     public function can_call_all_in_with_less_chips()
     {
-        $xLink = Client::register(Uuid::uuid4(), 'xLink', Chips::fromAmount(5500));
-        $jesus = Client::register(Uuid::uuid4(), 'jesus', Chips::fromAmount(5500));
+        $xLink = Client::register(1, 'xLink', Chips::fromAmount(5500));
+        $jesus = Client::register(2, 'jesus', Chips::fromAmount(5500));
 
         $gameRules = new CashGameParameters(Uuid::uuid4(), Chips::fromAmount(2), null, 9, Chips::fromAmount(500));
 
