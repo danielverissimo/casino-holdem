@@ -11,6 +11,8 @@ use Ramsey\Uuid\Uuid;
 
 class Action implements JsonSerializable
 {
+    const ANTE = 10;
+
     const DEALT_RIVER = 9;
     const DEALT_TURN = 8;
     const DEALT_FLOP = 7;

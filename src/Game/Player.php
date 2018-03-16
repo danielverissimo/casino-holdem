@@ -30,6 +30,11 @@ class Player extends Client implements PlayerContract, JsonSerializable
     private $timeBank = 10;
 
     /**
+     * @var int
+     */
+    private $seat;
+
+    /**
      * PlayerTest constructor.
      *
      * @param string $name
@@ -133,6 +138,16 @@ class Player extends Client implements PlayerContract, JsonSerializable
         $this->timeBank = $timeBank;
     }
 
+    public function seat()
+    {
+        return $this->seat;
+    }
+
+    public function setSeat($seat)
+    {
+        $this->seat = $seat;
+    }
+
     public function jsonSerialize()
     {
         return [
@@ -140,7 +155,8 @@ class Player extends Client implements PlayerContract, JsonSerializable
             'name' => $this->name(),
             'chipStack' => $this->chipStack()->jsonSerialize(),
             'stackWin' => $this->stackWin()->jsonSerialize(),
-            'timeBank' => $this->timeBank
+            'timeBank' => $this->timeBank,
+            'seat' => $this->seat
         ];
     }
 }

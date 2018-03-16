@@ -214,9 +214,11 @@ final class CashGame implements Game, JsonSerializable
 
     public function assignPlayersToTables()
     {
+        $avg = $this->players()->count() / 2;
+
         $groupedPlayers = $this->players()
         ->shuffle()
-            ->chunk($this->rules()->tableSize())
+            ->chunk($avg)
             ->map(function (PlayerCollection $players) {
                 $dealer = Dealer::startWork(new Deck(), new SevenCard());
 
@@ -225,6 +227,10 @@ final class CashGame implements Game, JsonSerializable
             ->toArray();
 
         $this->tables = TableCollection::make($groupedPlayers);
+
+        foreach ($this->tables() as $table){
+            $table->shuffleSeatedPlayers();
+        }
     }
 
     public function findPlayerTable($playerId)

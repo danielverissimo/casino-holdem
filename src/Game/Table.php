@@ -53,6 +53,12 @@ class Table extends BaseTable implements JsonSerializable
     private $currentRound;
 
     /**
+     * @var array
+     */
+    private $freeSeats;
+
+
+    /**
      * Table constructor.
      *
      * @param Uuid $id
@@ -66,6 +72,8 @@ class Table extends BaseTable implements JsonSerializable
         $this->playersSatOut = PlayerCollection::make();
         $this->playersWaitToIn = PlayerCollection::make();
         $this->dealer = $dealer;
+
+        $this->shuffleSeatedPlayers();
     }
 
     /**
@@ -205,7 +213,8 @@ class Table extends BaseTable implements JsonSerializable
     {
         ++$this->button;
 
-        if ($this->button >= $this->playersSatDown()->count()) {
+        // TODO para cache game trocar players() para playersSatDown()
+        if ($this->button >= $this->players()->count()) {
             $this->button = 0;
         }
     }
@@ -262,6 +271,49 @@ class Table extends BaseTable implements JsonSerializable
             })
             ->values();
     }
+
+    public function addPlayer(Player $player)
+    {
+        $seat = array_random($this->freeSeats);
+        $this->freeSeats = array_diff($this->freeSeats, array($seat));
+        $player->setSeat($seat);
+
+        $this->players()->push($player);
+
+        $this->players = $this->players()->sortBy(function ($player) {
+            return $player->seat();
+        });
+    }
+
+    public function shuffleSeatedPlayers()
+    {
+        $this->buildFreeSeatArray();
+
+        foreach ($this->players() as $player){
+
+            $seat = array_random($this->freeSeats);
+            $this->freeSeats = array_diff($this->freeSeats, array($seat));
+            $player->setSeat($seat);
+
+        }
+
+        $this->players = $this->players()->sortBy(function ($player) {
+            return $player->seat();
+        })->values();
+
+    }
+
+    public function buildFreeSeatArray()
+    {
+
+        $tableSize = 9; // $this->currentRound()->gameRules()->tableSize();
+
+        for($i=1; $i <= $tableSize; $i++){
+            $this->freeSeats[] = $i;
+        }
+
+    }
+
 
     public function dealerStartWork(Deck $deck, CardEvaluator $cardEvaluationRules){
         $this->dealer = $this->dealer()->startWork(new Deck(), new SevenCard());

@@ -532,6 +532,35 @@ class Round implements JsonSerializable
     }
 
     /**
+     * @param PlayerCollection $players
+     * @param int $ante
+     */
+    public function postAnte(PlayerCollection $players, int $ante)
+    {
+
+        Log::info('postAnte...');
+
+        foreach ($players as $player){
+
+            // Take chips from player
+            $playerChips = $player->chipStack();
+
+            if ( $playerChips->amount() < $ante ){
+                $this->playerPushesAllIn($player);
+            }else{
+
+                $chips = Chips::fromAmount($ante);
+                $this->postBlind($player, $chips);
+                $this->actions()->push(new Action($player, Action::ANTE, ['chips' => $chips]));
+
+            }
+
+        }
+
+        $this->collectChipTotal();
+    }
+
+    /**
      * @return Chips
      */
     private function smallBlind(): Chips
@@ -937,7 +966,7 @@ class Round implements JsonSerializable
     public function setupLeftToAct()
     {
 
-        if ($this->table()->playersSatDown()->count() === 2) {
+        if ($this->table()->players()->count() === 2) {
 
             if ( $this->dealer()->communityCards()->count() > 0 ){
 
@@ -962,6 +991,21 @@ class Round implements JsonSerializable
             ->setup($this->players())
             ->resetPlayerListFromSeat($this->table()->button() + 1);
     }
+
+//    public function noPlayersNeedsToAct(){
+//
+//        $leftToAct = $this->leftToAct();
+//
+//
+//        foreach ($leftToAct as $l) {
+//
+//            if ( $l['action'] === LeftToAct::AGGRESSIVELY_ACTIONED ||  ){
+//                $canCheck = false;
+//                break;
+//            }
+//        }
+//
+//    }
 
     /**
      * @param PlayerContract $player
