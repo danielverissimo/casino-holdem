@@ -156,11 +156,21 @@ class Table extends BaseTable implements JsonSerializable
     }
 
     /**
-     * @param PlayerContract $player
+     * @param PlayerContract $client
      */
-    public function sitPlayerOut(PlayerContract $player)
+    public function sitPlayerOut(PlayerContract $client)
     {
-        $this->playersSatOut = $this->playersSatOut->push($player);
+
+        $playerSitedOut = $this->playersSatOut
+            ->filter(function (Player $player) use ($client) {
+                return $player->id() === $client->id();
+            })
+            ->first();
+
+        if ( empty($playerSitedOut) ){
+            $this->playersSatOut->push($client);
+        }
+
     }
 
     /**
@@ -282,7 +292,7 @@ class Table extends BaseTable implements JsonSerializable
 
         $this->players = $this->players()->sortBy(function ($player) {
             return $player->seat();
-        });
+        })->values();
     }
 
     public function shuffleSeatedPlayers()

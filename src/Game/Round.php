@@ -88,6 +88,11 @@ class Round implements JsonSerializable
     private $lastActionStartedAt;
 
     /**
+     * @var bool
+     */
+    private $actionInProgress = false;
+
+    /**
      * Round constructor.
      *
      * @param Uuid $id
@@ -445,7 +450,7 @@ class Round implements JsonSerializable
         return $this->table()->locatePlayerWithButton();
     }
 
-    public function findPlayerById($playerId): ?PlayerContract
+    public function getPlayer($playerId): ?PlayerContract
     {
         return $this->players()
             ->filter(function (PlayerContract $player) use ($playerId) {
@@ -1033,6 +1038,18 @@ class Round implements JsonSerializable
 
     public function setLastActionStartedAt(Carbon $lastActionStartedAt){
         $this->lastActionStartedAt = $lastActionStartedAt;
+    }
+
+    public function actionInProgress(){
+        return $this->actionInProgress;
+    }
+
+    public function startActionProgress(){
+        $this->actionInProgress = true;
+    }
+
+    public function stopActionProgress(){
+        $this->actionInProgress = false;
     }
 
     function jsonSerialize()

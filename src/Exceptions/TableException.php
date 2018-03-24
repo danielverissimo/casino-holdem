@@ -36,4 +36,12 @@ class TableException extends Exception
         return new static($message);
     }
 
+    public static function tableDoNotExist(Table $table, $message = null)
+    {
+        $defaultMessage = sprintf('%s don\'t exist in this game: "%s"', $table->id()->toString());
+        $message = is_null($message) ? $defaultMessage : $message;
+
+        return new static($message);
+    }
+
 }

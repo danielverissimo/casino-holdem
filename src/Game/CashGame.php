@@ -236,9 +236,39 @@ final class CashGame implements Game, JsonSerializable
     public function findPlayerTable($playerId)
     {
         return $this->tables()->filter(function (Table $table) use ($playerId){
-            return !empty($table->findPlayerById($playerId));
+            return !empty($table->getPlayer($playerId));
         })->first();
 
+    }
+
+    public function removeTable($tableId)
+    {
+        $table = $this->tables()
+            ->filter(function (Table $table) use ($tableId) {
+                return $table->id()->equals($tableId);
+            })
+            ->first();
+
+        if ($table === null) {
+            throw TableException::tableDoNotExist($table, $this);
+        }
+
+        $this->tables = $this->tables()
+            ->reject(function (Table $table) use ($tableId) {
+                return $table->id()->equals($tableId);
+            })
+            ->values();
+    }
+
+    public function tableExists($tableId) : bool
+    {
+        $table = $this->tables()
+            ->filter(function (Table $table) use ($tableId) {
+                return $table->id()->equals($tableId);
+            })
+            ->first();
+
+        return empty($table) ? false: true;
     }
 
     public function jsonSerialize()
